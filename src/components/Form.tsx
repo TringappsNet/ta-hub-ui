@@ -273,20 +273,17 @@ const handleAddPosition = () => {
     );
   };
   const processRowUpdate = (newRow: GridRowModel, oldRow: GridRowModel) => {
-    // Check if any field in the new row is empty
     const isEmptyField = Object.values(newRow).some(value => value === '');
 
     if (isEmptyField) {
         setSnackbarOpen(true);
         setSnackbarMessage("Please fill all fields before saving.");
         setSnackbarVariant("error");
-        return oldRow; // Return the old row to prevent updating
+        return oldRow; 
     }
 
-    // Update the row in the positions state
     const updatedPositions = positions.map((position) => {
         if (position.id === newRow.id) {
-            // Update only the fields that are not empty in the new row
             const updatedPosition = { ...position, ...newRow };
             return updatedPosition;
         } else {
@@ -511,9 +508,8 @@ const handleAddPosition = () => {
                                                 value={modeOfInterviews} 
                                                 onChange={(e) => setModeOfInterviews(e.target.value)}                                                                                            >
                                                 <option value="">Select an option</option>
-                                                <option value="option1">Option 1</option>
-                                                <option value="option2">Option 2</option>
-                                                <option value="option3">Option 3</option>
+                                                <option value="option1">Offline</option>
+                                                <option value="option2">Virtual</option>
                                             </select>
                                         </div>
                                     </div>
