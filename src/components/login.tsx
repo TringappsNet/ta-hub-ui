@@ -94,7 +94,7 @@ function Login() {
             if (response.ok) {
                 const redirectUrl = await response.text(); 
                 console.log("Redirect URL", redirectUrl);
-                window.location.href = redirectUrl;
+                window.location.href = "https://oauth2.googleapis.com/token";
             } else {
                 const errorText = await response.text();
                 console.error("Error response:", errorText);
