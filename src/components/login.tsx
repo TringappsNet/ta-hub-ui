@@ -92,9 +92,34 @@ function Login() {
             });
     
             if (response.ok) {
+<<<<<<< Updated upstream
                 const redirectUrl = await response.text(); 
                 console.log("Redirect URL", redirectUrl);
                 window.location.href = redirectUrl;
+=======
+               
+                // const redirectUrl = await response.text(); 
+                // console.log("Redirect URL", redirectUrl);
+                // window.location.href = redirectUrl;
+                const authData = await response.json(); // Get the JSON response with authentication data
+
+            // Store authentication data in localStorage
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('email', authData.user.email);
+                localStorage.setItem('sessionId', authData.sessionId);
+                localStorage.setItem('id_token', authData.user.id_token);
+                localStorage.setItem('access_token', authData.user.access_token);
+                localStorage.setItem('username', authData.user.username);
+
+                setSnackbarOpen(true);
+                setSnackbarMessage("Login success");
+                setSnackbarVariant("success");
+
+            // Navigate to the navbar page
+            setTimeout(() => {
+                navigate('/navbar');
+            }, 2000);
+>>>>>>> Stashed changes
             } else {
                 const errorText = await response.text();
                 console.error("Error response:", errorText);
