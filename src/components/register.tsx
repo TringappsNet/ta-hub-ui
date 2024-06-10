@@ -73,13 +73,14 @@ function Register() {
                 },
                 body: JSON.stringify(payload)
             });
+            const message=await response.text();
 
             if (!response.ok) {
-                throw new Error("Failed to register");
+                throw new Error(message);
             }
 
             setSnackbarOpen(true);
-            setSnackbarMessage("Registration successful!");
+            setSnackbarMessage(message);
             setSnackbarVariant("success");
             setTimeout(() => {
                 navigate('/login');
@@ -95,7 +96,7 @@ function Register() {
         } catch (error) {
             console.error("Registration error:", error);
             setSnackbarOpen(true);
-            setSnackbarMessage("Failed to register. Please try again.");
+            setSnackbarMessage(error.message);
             setSnackbarVariant("error");
         }
     };

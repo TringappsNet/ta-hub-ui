@@ -25,7 +25,6 @@ function Login() {
             EMPTY_FIELD:"Please fill all fields!",
             EMAIL:"Invalid email address!",
             PASSWORD: "Password must be at least 8 characters long!",
-            SERVER_PROB: "Oops! Something went wrong on our end. Please try again later.",
             CLIENT_PROB: "Oops! Please try again later.",
          }
 
@@ -82,7 +81,7 @@ function Login() {
             console.error("Error logging in:", error.message);
             if(error.message === "Failed to fetch"){
             setSnackbarOpen(true);
-            setSnackbarMessage(DISPLAY_MSG.SERVER_PROB);
+            setSnackbarMessage(error.message1);
             setSnackbarVariant("error");
             }
         else{
