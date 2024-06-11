@@ -70,9 +70,24 @@ function Login() {
 
         } catch (error) {
             console.error("Error logging in:", error.message);
+<<<<<<< Updated upstream
             setSnackbarOpen(true);
             setSnackbarMessage("Error!! Please try again.");
             setSnackbarVariant("error");
+=======
+            if (error.message === "Failed to fetch") {
+                // Display the server error message from the backend
+                setSnackbarOpen(true);
+                setSnackbarMessage(error.response.data.message); 
+                setSnackbarVariant("error");
+            }
+        else{
+            setSnackbarOpen(true);
+            setSnackbarMessage(error.message);
+            setSnackbarVariant("error");
+        }
+           
+>>>>>>> Stashed changes
         }
     };
 
