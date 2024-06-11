@@ -23,12 +23,28 @@ export default function MenuPopupState() {
         }
     }, []);
 
-    const handleLogoutConfirm = () => {
-        localStorage.clear();
-        setLogoutDialogOpen(false);
-        navigate("/login"); 
-        
+    const handleLogoutConfirm = async () => {
+        try {
+            await fetch("http://localhost:8080/api/logout", {
+                method: "POST",
+                credentials: 'include'
+            });
+            localStorage.clear();
+            sessionStorage.removeItem('user'); // Clear user session data
+            setLogoutDialogOpen(false);
+            navigate("/login"); 
+        } catch (error) {
+            console.error("Error during logout:", error);
+        }
     };
+
+
+    // const handleLogoutConfirm = () => {
+    //     localStorage.clear();
+    //     setLogoutDialogOpen(false);
+    //     navigate("/login"); 
+        
+    // };
     
     const openInvitePopup = () => {
         setShowInvitePopup(true);

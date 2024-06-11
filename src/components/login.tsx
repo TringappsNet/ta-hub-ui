@@ -92,19 +92,43 @@ function Login() {
             });
     
             if (response.ok) {
-                const redirectUrl = await response.text(); 
-                console.log("Redirect URL", redirectUrl);
-                window.location.href = redirectUrl;
+                const responseData = await response.json();
+    
+                // Store only the email in local storage
+                if (responseData.user && responseData.user.email) {
+                    localStorage.setItem('email', responseData.user.email);
+                }
+    
+                if (responseData.redirectUrl) {
+                    window.location.href = responseData.redirectUrl;
+                    return;
+                } else if (responseData.sessionId && responseData.user) {
+    
+                    if (responseData.isNewUser) {
+                        // New user, navigate to /navbar
+                        window.location.href = "/navbar";
+                    } else {
+                        // Check if the user session is valid
+                        const sessionUser = sessionStorage.getItem('user');
+                        if (sessionUser) {
+                            // Existing session, navigate to /navbar
+                            window.location.href = "/navbar";
+                        } else {
+                            // No existing session, create new and navigate to /navbar
+                            sessionStorage.setItem('user', JSON.stringify(responseData.user));
+                            window.location.href = "/navbar";
+                        }
+                    }
+                }
             } else {
-                 const errorText = await response.text();
+                const errorText = await response.text();
                 console.error("Error response:", errorText);
                 throw new Error('Failed to get Google sign-in URL');
             }
         } catch (error) {
             console.error("Error signing in with Google:", error.message);
         }
-    };
-
+    }; 
     return (
         <div className="image">
             <div className="left">
