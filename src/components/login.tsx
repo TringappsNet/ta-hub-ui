@@ -19,24 +19,32 @@ function Login() {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const isEmailValid = emailRegex.test(email);
         const isPasswordValid = password.length >= 8;
+        const userCredentials = { email, password };
+        const DISPLAY_MSG={
+            EMPTY_FIELD:"Please fill all fields!",
+            EMAIL:"Invalid email address!",
+            PASSWORD: "Password must be at least 8 characters long!",
+            SERVER_PROB: "Oops! Something went wrong on our end. Please try again later.",
+            CLIENT_PROB: "Oops! Please try again later.",
+         }
 
         if (!email || !password) {
             setSnackbarOpen(true);
-            setSnackbarMessage("Please fill all fields!");
+            setSnackbarMessage(DISPLAY_MSG.EMPTY_FIELD);
             setSnackbarVariant("error");
             return;
         }
 
         if (!isEmailValid) {
             setSnackbarOpen(true);
-            setSnackbarMessage("Invalid email address!");
+            setSnackbarMessage(DISPLAY_MSG.EMAIL);
             setSnackbarVariant("error");
             return;
         }
 
         if (!isPasswordValid) {
             setSnackbarOpen(true);
-            setSnackbarMessage("Password must be at least 8 characters long!");
+            setSnackbarMessage(DISPLAY_MSG.PASSWORD);
             setSnackbarVariant("error");
             return;
         }
@@ -48,20 +56,27 @@ function Login() {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ email, password })
+                body: JSON.stringify(userCredentials),
             });
 
             if (!response.ok) {
-                throw new Error("Failed to login");
+                const errorData = await response.json();
+                throw new Error(errorData.message || DISPLAY_MSG.CLIENT_PROB);
             }
 
             const data = await response.json();
+
+    
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('email', email);
+            localStorage.setItem('sessionId', data.sessionId);
+
             localStorage.setItem('isLoggedIn', 'true');
             localStorage.setItem('email', email);
             localStorage.setItem('sessionId', data.sessionId);
 
             setSnackbarOpen(true);
-            setSnackbarMessage("Login success");
+            setSnackbarMessage(data.message);
             setSnackbarVariant("success");
             setTimeout(() => {
                 setLoading(false);
@@ -70,9 +85,17 @@ function Login() {
 
         } catch (error) {
             console.error("Error logging in:", error.message);
+            if(error.message === "Failed to fetch"){
             setSnackbarOpen(true);
-            setSnackbarMessage("Error!! Please try again.");
+            setSnackbarMessage(DISPLAY_MSG.SERVER_PROB);
             setSnackbarVariant("error");
+            }
+        else{
+            setSnackbarOpen(true);
+            setSnackbarMessage(error.message);
+            setSnackbarVariant("error");
+        }
+           
         }
     };
 
