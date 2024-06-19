@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import '../styles/login.css';
 import CustomSnackbar from "./CustomSnackbar";
+// import Loader from "./Loader"; 
 
 function Login() {
     const [email, setEmail] = useState("");
@@ -11,7 +12,7 @@ function Login() {
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("");
     const [snackbarVariant, setSnackbarVariant] = useState('success');
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);  // Loader state
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -19,83 +20,59 @@ function Login() {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const isEmailValid = emailRegex.test(email);
         const isPasswordValid = password.length >= 8;
-        const userCredentials = { email, password };
-        const DISPLAY_MSG={
-            EMPTY_FIELD:"Please fill all fields!",
-            EMAIL:"Invalid email address!",
-            PASSWORD: "Password must be at least 8 characters long!",
-            SERVER_PROB: "Oops! Something went wrong on our end. Please try again later.",
-            CLIENT_PROB: "Oops! Please try again later.",
-         }
 
         if (!email || !password) {
             setSnackbarOpen(true);
-            setSnackbarMessage(DISPLAY_MSG.EMPTY_FIELD);
+            setSnackbarMessage("Please fill all fields!");
             setSnackbarVariant("error");
             return;
         }
 
         if (!isEmailValid) {
             setSnackbarOpen(true);
-            setSnackbarMessage(DISPLAY_MSG.EMAIL);
+            setSnackbarMessage("Invalid email address!");
             setSnackbarVariant("error");
             return;
         }
 
         if (!isPasswordValid) {
             setSnackbarOpen(true);
-            setSnackbarMessage(DISPLAY_MSG.PASSWORD);
+            setSnackbarMessage("Password must be at least 8 characters long!");
             setSnackbarVariant("error");
             return;
         }
 
         try {
-            setLoading(true);
+            setLoading(true);  // Start loader
             const response = await fetch("http://localhost:8080/api/auth/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify(userCredentials),
+                body: JSON.stringify({ email, password })
             });
+            localStorage.setItem('isLoggedIn', 'true');
 
+            localStorage.setItem('email', email);
+            const data = await response.json();
+            localStorage.setItem('sessionId', data.sessionId);
             if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || DISPLAY_MSG.CLIENT_PROB);
+                throw new Error("Failed to login");
             }
 
-            const data = await response.json();
-
-    
-            localStorage.setItem('isLoggedIn', 'true');
-            localStorage.setItem('email', email);
-            localStorage.setItem('sessionId', data.sessionId);
-
-            localStorage.setItem('isLoggedIn', 'true');
-            localStorage.setItem('email', email);
-            localStorage.setItem('sessionId', data.sessionId);
-
             setSnackbarOpen(true);
-            setSnackbarMessage(data.message);
+            setSnackbarMessage("Login success");
             setSnackbarVariant("success");
             setTimeout(() => {
-                setLoading(false);
-                navigate('/navbar');
+                setLoading(false);  // Stop loader before navigation
+                navigate('/navbar'); 
             }, 2000);
 
         } catch (error) {
             console.error("Error logging in:", error.message);
-            if(error.message === "Failed to fetch"){
             setSnackbarOpen(true);
-            setSnackbarMessage(DISPLAY_MSG.SERVER_PROB);
+            setSnackbarMessage("Error!! Please try again.");
             setSnackbarVariant("error");
-            }
-        else{
-            setSnackbarOpen(true);
-            setSnackbarMessage(error.message);
-            setSnackbarVariant("error");
-        }
-           
         }
     };
 
@@ -114,7 +91,6 @@ function Login() {
                 credentials: 'include'
             });
     
-
             if (response.ok) {
                 const responseData = await response.json();
     
@@ -143,49 +119,15 @@ function Login() {
                         }
                     }
                 }
-
-            // Check if the response content type is JSON
-            const contentType = response.headers.get("content-type");
-            if (contentType && contentType.indexOf("application/json") !== -1) {
-                const authData = await response.json();
-    
-                // Store authentication data in localStorage
-                localStorage.setItem('isLoggedIn', 'true');
-                localStorage.setItem('email', authData.user.email);
-                localStorage.setItem('sessionId', authData.sessionId);
-                localStorage.setItem('id_token', authData.user.id_token);
-                localStorage.setItem('access_token', authData.user.access_token);
-                localStorage.setItem('username', authData.user.username);
-    
-                setSnackbarOpen(true);
-                setSnackbarMessage("Login success");
-                setSnackbarVariant("success");
-    
-                // Navigate to the navbar page
-                setTimeout(() => {
-                    navigate('/navbar');
-                }, 2000);
-
             } else {
-                // If the response is not JSON, treat it as a redirect URL
-                const responseText = await response.text();
-                console.log("Redirecting to:", responseText);
-                window.location.href = responseText;
+                const errorText = await response.text();
+                console.error("Error response:", errorText);
+                throw new Error('Failed to get Google sign-in URL');
             }
         } catch (error) {
             console.error("Error signing in with Google:", error.message);
-            setSnackbarOpen(true);
-            setSnackbarMessage("Error!! Please try again.");
-            setSnackbarVariant("error");
         }
-
     }; 
-
-    };
-    
-
-
-
     return (
         <div className="image">
             <div className="left">
