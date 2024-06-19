@@ -205,10 +205,12 @@ const List = () => {
   return (
     <Box
       sx={{
-        height: 600,
+        height: 700,
         width: '94%',
         paddingLeft: 10,
-        marginTop: 5,
+        paddingTop: 5,
+        paddingBottom:10,
+      
       }}
     >
       <Snackbar
