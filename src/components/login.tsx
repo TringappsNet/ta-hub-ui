@@ -101,7 +101,6 @@ function Login() {
     
                 if (responseData.redirectUrl) {
                     window.location.href = responseData.redirectUrl;
-                    return;
                 } else if (responseData.sessionId && responseData.user) {
     
                     if (responseData.isNewUser) {
