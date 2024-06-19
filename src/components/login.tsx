@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import '../styles/login.css';
 import CustomSnackbar from "./CustomSnackbar";
-// import Loader from "./Loader"; 
 
 function Login() {
     const [email, setEmail] = useState("");
@@ -12,7 +11,7 @@ function Login() {
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("");
     const [snackbarVariant, setSnackbarVariant] = useState('success');
-    const [loading, setLoading] = useState(false);  // Loader state
+    const [loading, setLoading] = useState(false);
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -43,7 +42,7 @@ function Login() {
         }
 
         try {
-            setLoading(true);  // Start loader
+            setLoading(true);
             const response = await fetch("http://localhost:8080/api/auth/login", {
                 method: "POST",
                 headers: {
@@ -51,21 +50,22 @@ function Login() {
                 },
                 body: JSON.stringify({ email, password })
             });
-            localStorage.setItem('isLoggedIn', 'true');
 
-            localStorage.setItem('email', email);
-            const data = await response.json();
-            localStorage.setItem('sessionId', data.sessionId);
             if (!response.ok) {
                 throw new Error("Failed to login");
             }
+
+            const data = await response.json();
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('email', email);
+            localStorage.setItem('sessionId', data.sessionId);
 
             setSnackbarOpen(true);
             setSnackbarMessage("Login success");
             setSnackbarVariant("success");
             setTimeout(() => {
-                setLoading(false);  // Stop loader before navigation
-                navigate('/navbar'); 
+                setLoading(false);
+                navigate('/navbar');
             }, 2000);
 
         } catch (error) {
@@ -91,19 +91,42 @@ function Login() {
                 credentials: 'include'
             });
     
-            if (response.ok) {
-                const redirectUrl = await response.text(); 
-                console.log("Redirect URL", redirectUrl);
-                window.location.href = redirectUrl;
+            // Check if the response content type is JSON
+            const contentType = response.headers.get("content-type");
+            if (contentType && contentType.indexOf("application/json") !== -1) {
+                const authData = await response.json();
+    
+                // Store authentication data in localStorage
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('email', authData.user.email);
+                localStorage.setItem('sessionId', authData.sessionId);
+                localStorage.setItem('id_token', authData.user.id_token);
+                localStorage.setItem('access_token', authData.user.access_token);
+                localStorage.setItem('username', authData.user.username);
+    
+                setSnackbarOpen(true);
+                setSnackbarMessage("Login success");
+                setSnackbarVariant("success");
+    
+                // Navigate to the navbar page
+                setTimeout(() => {
+                    navigate('/navbar');
+                }, 2000);
             } else {
-                const errorText = await response.text();
-                console.error("Error response:", errorText);
-                throw new Error('Failed to get Google sign-in URL');
+                // If the response is not JSON, treat it as a redirect URL
+                const responseText = await response.text();
+                console.log("Redirecting to:", responseText);
+                window.location.href = responseText;
             }
         } catch (error) {
             console.error("Error signing in with Google:", error.message);
+            setSnackbarOpen(true);
+            setSnackbarMessage("Error!! Please try again.");
+            setSnackbarVariant("error");
         }
     };
+    
+
 
     return (
         <div className="image">
