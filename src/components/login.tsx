@@ -21,6 +21,15 @@ function Login() {
         const isEmailValid = emailRegex.test(email);
         const isPasswordValid = password.length >= 8;
 
+        const userCredentials = { email, password };
+        const DISPLAY_MSG={
+            EMPTY_FIELD:"Please fill all fields!",
+            EMAIL:"Invalid email address!",
+            PASSWORD: "Password must be at least 8 characters long!",
+            CLIENT_PROB: "Oops! Please try again later.",
+         }
+
+
         if (!email || !password) {
             setSnackbarOpen(true);
             setSnackbarMessage("Please fill all fields!");
@@ -71,7 +80,15 @@ function Login() {
         } catch (error) {
             console.error("Error logging in:", error.message);
             setSnackbarOpen(true);
+            setSnackbarMessage(error.message1);
+            setSnackbarVariant("error");
+            }
+        else{
+            setSnackbarOpen(true);
+            setSnackbarMessage(error.message);
+
             setSnackbarMessage("Error!! Please try again.");
+
             setSnackbarVariant("error");
         }
     };
