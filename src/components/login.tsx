@@ -91,8 +91,6 @@ function Login() {
             if(error.message === "Failed to fetch"){
             setSnackbarOpen(true);
             setSnackbarMessage(DISPLAY_MSG.SERVER_PROB);
-
-            setSnackbarMessage(error.message1);
             setSnackbarVariant("error");
             }
         else{
