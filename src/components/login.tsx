@@ -59,17 +59,18 @@ function Login() {
                 body: JSON.stringify(userCredentials),
             });
             if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message );
+                const errorData = await response.text();
+                throw new Error(errorData);
             }
 
             const data = await response.json();
+            const { sessionId, message } = data;
     
             localStorage.setItem('isLoggedIn', 'true');
-            localStorage.setItem('email', email);
-            localStorage.setItem('sessionId', data.sessionId);
+            localStorage.setItem('email',userCredentials.email);
+            localStorage.setItem('sessionId', sessionId);
             setSnackbarOpen(true);
-            setSnackbarMessage(data.message);
+            setSnackbarMessage(message);
             setSnackbarVariant("success");
             setTimeout(() => {
                 setLoading(false);  // Stop loader before navigation
