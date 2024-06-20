@@ -30,7 +30,7 @@ const Navbar = () => {
   useEffect(() => {
     const isLoggedIn = localStorage.getItem("isLoggedIn");
     if (!isLoggedIn) {
-      navigate("/login");
+      // navigate("/login");
     }
   }, [navigate]);
 

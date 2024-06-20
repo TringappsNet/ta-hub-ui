@@ -28,6 +28,15 @@ function Login() {
             SERVER_PROB: "Oops! Something went wrong on our end. Please try again later.",
          }
 
+        const userCredentials = { email, password };
+        const DISPLAY_MSG={
+            EMPTY_FIELD:"Please fill all fields!",
+            EMAIL:"Invalid email address!",
+            PASSWORD: "Password must be at least 8 characters long!",
+            CLIENT_PROB: "Oops! Please try again later.",
+         }
+
+
         if (!email || !password) {
             setSnackbarOpen(true);
             setSnackbarMessage(DISPLAY_MSG.EMPTY_FIELD);
@@ -81,6 +90,16 @@ function Login() {
             if(error.message === "Failed to fetch"){
             setSnackbarOpen(true);
             setSnackbarMessage(DISPLAY_MSG.SERVER_PROB);
+
+            setSnackbarMessage(error.message1);
+            setSnackbarVariant("error");
+            }
+        else{
+            setSnackbarOpen(true);
+            setSnackbarMessage(error.message);
+
+            setSnackbarMessage("Error!! Please try again.");
+
             setSnackbarVariant("error");
             }
         else{
@@ -107,9 +126,33 @@ function Login() {
             });
     
             if (response.ok) {
-                const redirectUrl = await response.text(); 
-                console.log("Redirect URL", redirectUrl);
-                window.location.href = redirectUrl;
+                const responseData = await response.json();
+    
+                // Store only the email in local storage
+                if (responseData.user && responseData.user.email) {
+                    localStorage.setItem('email', responseData.user.email);
+                }
+    
+                if (responseData.redirectUrl) {
+                    window.location.href = responseData.redirectUrl;
+                } else if (responseData.sessionId && responseData.user) {
+    
+                    if (responseData.isNewUser) {
+                        // New user, navigate to /navbar
+                        window.location.href = "/navbar";
+                    } else {
+                        // Check if the user session is valid
+                        const sessionUser = sessionStorage.getItem('user');
+                        if (sessionUser) {
+                            // Existing session, navigate to /navbar
+                            window.location.href = "/navbar";
+                        } else {
+                            // No existing session, create new and navigate to /navbar
+                            sessionStorage.setItem('user', JSON.stringify(responseData.user));
+                            window.location.href = "/navbar";
+                        }
+                    }
+                }
             } else {
                 const errorText = await response.text();
                 console.error("Error response:", errorText);
@@ -118,8 +161,7 @@ function Login() {
         } catch (error) {
             console.error("Error signing in with Google:", error.message);
         }
-    };
-
+    }; 
     return (
         <div className="image">
             <div className="left">
