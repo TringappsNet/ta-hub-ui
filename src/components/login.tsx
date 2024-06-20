@@ -83,14 +83,6 @@ function Login() {
             setSnackbarMessage(error.message1);
             setSnackbarVariant("error");
             }
-        else{
-            setSnackbarOpen(true);
-            setSnackbarMessage(error.message);
-
-            setSnackbarMessage("Error!! Please try again.");
-
-            setSnackbarVariant("error");
-        }
     };
 
     const handleCloseSnackbar = () => {
