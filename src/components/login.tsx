@@ -28,13 +28,13 @@ function Login() {
             SERVER_PROB: "Oops! Something went wrong on our end. Please try again later.",
          }
 
-        const userCredentials = { email, password };
-        const DISPLAY_MSG={
-            EMPTY_FIELD:"Please fill all fields!",
-            EMAIL:"Invalid email address!",
-            PASSWORD: "Password must be at least 8 characters long!",
-            CLIENT_PROB: "Oops! Please try again later.",
-         }
+        // const userCredentials = { email, password };
+        // const DISPLAY_MSG={
+        //     EMPTY_FIELD:"Please fill all fields!",
+        //     EMAIL:"Invalid email address!",
+        //     PASSWORD: "Password must be at least 8 characters long!",
+        //     CLIENT_PROB: "Oops! Please try again later.",
+        //  }
 
 
         if (!email || !password) {
