@@ -28,29 +28,28 @@ function ResetPassword() {
                     "Email": email
                 },
                 body: JSON.stringify({
-                    email,
-                    oldPassword,
-                    newPassword,
-                    confirmPassword
+                  email: email,           
+                  oldPassword: oldPassword,  
+                  newPassword: newPassword
                 })
             });
 
             if (!response.ok) {
-                throw new Error("Failed to reset password");
+                const errorResponse = await response.text();
+                throw new Error(errorResponse); 
             }
-
+            const data = await response.text()
             // Show success message
-            setSnackbarMessage("Password reset successfully");
+            setSnackbarMessage(data);
             setSnackbarVariant("success");
             setSnackbarOpen(true);
 
-            // Clear input fields
             setOldPassword("");
             setNewPassword("");
             setConfirmPassword("");
         } catch (error) {
             console.error("Error resetting password:", error.message);
-            setSnackbarMessage("Error resetting password. Please try again.");
+            setSnackbarMessage(error.message);
             setSnackbarVariant("error");
             setSnackbarOpen(true);
         }

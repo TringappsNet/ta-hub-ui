@@ -75,6 +75,7 @@ function Register() {
             });
             const message=await response.text();
 
+
             if (!response.ok) {
                 throw new Error(message);
             }

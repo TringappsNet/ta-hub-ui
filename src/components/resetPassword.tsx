@@ -46,13 +46,13 @@ function ResetNew() {
 
             if (!response.ok) {
                 const errorText = await response.text();
-                throw new Error("Failed to reset password: " + errorText);
+                throw new Error(errorText);
             }
-
+            const data = await response.text()
             setNewPassword("");
             setConfirmPassword("");
             setErrorMessage("");
-            setSnackbarMessage("Password reset successfully");
+            setSnackbarMessage(data);
             setSnackbarVariant("success");
             setTimeout(() => {
                 navigate('/login');
@@ -61,8 +61,7 @@ function ResetNew() {
 
         } catch (error) {
             console.error("Error resetting password:", error.message);
-            setErrorMessage("Error resetting password. Please try again later.");
-            setSnackbarMessage("Error resetting password. Please try again later.");
+            setSnackbarMessage(error.message);
             setSnackbarVariant("error");
             setSnackbarOpen(true);
         }

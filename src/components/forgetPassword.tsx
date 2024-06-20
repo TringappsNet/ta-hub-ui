@@ -30,7 +30,8 @@ function ForgetPassword() {
             if (!response.ok) {
                 throw new Error("Failed to request reset link");
             }   
-            setSnackbarMessage("Password reset successfully");
+             const data = await response.text();
+            setSnackbarMessage(data);
             setSnackbarVariant("success");
             setSnackbarOpen(true);
 
