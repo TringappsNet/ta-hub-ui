@@ -38,7 +38,6 @@ function ForgetPassword() {
             // Reset form fields or show a success message
         } catch (error) {
             console.error("Error requesting reset link:", error.message);
-            setErrorMessage("Error resetting password. Please try again later.");
             setSnackbarMessage("Error resetting password. Please try again later.");
             setSnackbarVariant("error");
             setSnackbarOpen(true);
