@@ -36,7 +36,7 @@ function ResetNew() {
                 newPassword: newPassword
             });
 
-            const response = await fetch("http://localhost:8080/api/auth/reset-password", {
+            const response = await fetch("http://localhost:8090/api/auth/reset-password", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded"

@@ -20,7 +20,7 @@ function ResetPassword() {
 
             console.log("Session ID:", sessionId);
 
-            const response = await fetch("http://localhost:8080/api/auth/reset-new-password", {
+            const response = await fetch("http://localhost:8090/api/auth/reset-new-password", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
