@@ -621,7 +621,7 @@ else if (apiEndpoint === 'http://localhost:8080/api/clients/') {
             startIcon={<AddIcon />}
             onClick={handleAddClick}
             variant="contained"
-            sx={{ mb: 2, bgcolor: '#2A3F54', color: 'white',marginLeft:130 }}
+            sx={{ mb: 2, bgcolor: '#2A3F54', color: 'white',marginLeft:120 }}
     >
             
             {getButtonLabel()}
