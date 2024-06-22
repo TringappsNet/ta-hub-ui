@@ -276,7 +276,20 @@ const handleAddClick = () => {
         [id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
     }));
 };
-
+const getButtonLabel = () => {
+    switch (apiEndpoint) {
+        case 'http://localhost:8080/api/users/':
+            return 'Add User';
+        case 'http://localhost:8080/api/candidates/status':
+            return 'Add Candidate';
+        case 'http://localhost:8080/api/clients/clientPositions':
+            return 'Add Position';
+        case 'http://localhost:8080/api/clients/':
+            return 'Add Client';
+        default:
+            return 'Add';
+    }
+};
 
 let columns= [];
 
@@ -610,7 +623,8 @@ else if (apiEndpoint === 'http://localhost:8080/api/clients/') {
             variant="contained"
             sx={{ mb: 2, bgcolor: '#2A3F54', color: 'white',marginLeft:130 }}
     >
-            Add Record
+            
+            {getButtonLabel()}
         </Button>
         <DataGrid
                     rowHeight={34}
