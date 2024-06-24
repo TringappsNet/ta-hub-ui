@@ -78,14 +78,18 @@ useEffect(() => {
     async function fetchData() {
         const data = await fetchDataFromAPI(apiEndpoint);
         if (apiEndpoint === 'http://localhost:8090/api/users/') {
+        if (apiEndpoint === 'http://localhost:8090/api/users/') {
             dispatch(setUsers(data));
             
             console.log("datas",data);
         } else if (apiEndpoint === 'http://localhost:8090/api/clients/clientPositions') {
+        } else if (apiEndpoint === 'http://localhost:8090/api/clients/clientPositions') {
             dispatch(setClients(data));
+        } else if (apiEndpoint === 'http://localhost:8090/api/candidates/status') {
         } else if (apiEndpoint === 'http://localhost:8090/api/candidates/status') {
             dispatch(setCandidates(data));
         }
+        else if (apiEndpoint === 'http://localhost:8090/api/clients/') {
         else if (apiEndpoint === 'http://localhost:8090/api/clients/') {
             // dispatch(setCandidates(data));
             setRows(data);
@@ -148,17 +152,20 @@ const handleConfirmDelete = async () => {
         }
 
         if (apiEndpoint === 'http://localhost:8090/api/users/') {
+        if (apiEndpoint === 'http://localhost:8090/api/users/') {
             const userId = rowData.userId;
             dispatch(deleteUserOnServer(userId));
             dispatch(deleteUser(userId));
             handleOpenSnackbar('Record deleted successfully!', 'success');
 
         } else if (apiEndpoint === 'http://localhost:8090/api/candidates/status') {
+        } else if (apiEndpoint === 'http://localhost:8090/api/candidates/status') {
             const candidateId = rowData.candidateId;
             dispatch(deleteCandidateOnServer(candidateId));
             dispatch(deleteCandidate(candidateId));
             handleOpenSnackbar('Record deleted successfully!', 'success');
 
+        } else if (apiEndpoint === 'http://localhost:8090/api/clients/clientPositions ' || apiEndpoint === 'http://localhost:8080/api/clients/' ) {
         } else if (apiEndpoint === 'http://localhost:8090/api/clients/clientPositions ' || apiEndpoint === 'http://localhost:8080/api/clients/' ) {
             const clientId = rowData.clientId;
             dispatch(deleteClientOnServer(clientId));
@@ -216,10 +223,12 @@ const processRowUpdate = async (rowUpdate, row) => {
         } else {
          
             if (apiEndpoint === 'http://localhost:8090/api/users/') {
+            if (apiEndpoint === 'http://localhost:8090/api/users/') {
                 await updateUserOnServer(newRow);
                 handleOpenSnackbar('User Updated successfully!', 'success');
             } else if (apiEndpoint === 'http://localhost:8090/api/candidates/status') {
 
+                const response = await fetch(`http://localhost:8090/api/candidates/candidate/${newRow.candidateId}`, {
                 const response = await fetch(`http://localhost:8090/api/candidates/candidate/${newRow.candidateId}`, {
       method: 'PUT',
       headers: {
@@ -235,6 +244,8 @@ const processRowUpdate = async (rowUpdate, row) => {
                 // await updateCandidateOnServer(newRow);
                 // console.log("candidate row",newRow)
                 handleOpenSnackbar('Candidate Updated successfully!', 'success');
+            } else if (apiEndpoint === 'http://localhost:8090/api/clients/clientPositions') {
+                const response = await fetch(`http://localhost:8090/api/clients/client/${newRow.clientId}`, {
             } else if (apiEndpoint === 'http://localhost:8090/api/clients/clientPositions') {
                 const response = await fetch(`http://localhost:8090/api/clients/client/${newRow.clientId}`, {
                     method: 'PUT',
@@ -280,6 +291,7 @@ const handleAddClick = () => {
 
 let columns= [];
 
+if (apiEndpoint === 'http://localhost:8090/api/users/') {
 if (apiEndpoint === 'http://localhost:8090/api/users/') {
     columns = [
         { field: 'userId', headerName: 'USER ID', width: 140, editable: true, headerAlign: 'center', align: 'center', headerClassName: 'custom-header' },
