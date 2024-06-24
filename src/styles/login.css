@@ -64,7 +64,6 @@
     padding: 10px;
     max-width: 363px; 
     width: 90%; 
-    /* margin: auto;  */
     font-family: 'G Centra Book', sans-serif;
     padding-bottom: 0px;
 }
@@ -166,10 +165,11 @@ input::placeholder{
 .login-href {
     color: #0ba871;
     font-size: small;
-    padding-right: 155px;
-    padding-top: 10px;
+    margin-right: 90px; /* Adjust margin for proper spacing */
     font-family: 'G Centra Book', sans-serif;
     text-decoration: none;
+    /* Aligns the link with the top of its container */
+    margin-top: 15px; /* Adds space between the fields and the link */
 }
 .login-href:hover{
     text-decoration: underline;
@@ -181,7 +181,7 @@ input::placeholder{
     margin-bottom: 8px;
     display: flex;
     /* margin-right: 71px; */
-    padding-right: 149px;
+    padding-right: 86px;
     gap: 10px;
     font-size: 13px;
     font-family: 'G Centra Book', sans-serif;
@@ -260,7 +260,7 @@ input[type="checkbox"] {
     font-family: 'G Centra Book', sans-serif;
     display: inline-flex;
     align-items: center;
-    gap: 20px;
+    gap: 10px;
     font-size: 13px;
     border-radius: 9px;
     height: 40px;
@@ -269,17 +269,13 @@ input[type="checkbox"] {
 }
 
 .google-signin-button .icon {
-    margin-left: 60px;
+    margin-left: 40px;
     margin-bottom: 6px;
     width: 20px; 
     height: 20px; 
     background-image: url('/src/assets/images/icons8-google-48.png');
-    background-size: cover; 
+    background-size: cover;  
 }
-
-
-
-
 
 * {
     margin: 0;
@@ -359,6 +355,10 @@ input[type="checkbox"] {
     .card1 {
         width: 90%; 
     }
+
+    .login-href {
+        margin-right: 20px; /* Adjust for medium-sized screens */
+    }
 }
 
 @media screen and (max-width: 576px) {
@@ -372,6 +372,12 @@ input[type="checkbox"] {
 
     .checkbox {
         margin-bottom: 20px; 
+    }
+
+    .login-href {
+        margin-right: 0; /* Adjust for smaller screens */
+        text-align: center; /* Center align on smaller screens */
+        margin-top: 10px; /* Add margin to separate from other elements */
     }
 }
 
@@ -401,9 +407,14 @@ input[type="checkbox"] {
     }
   }
   
-  @media screen and (max-width: 576px) {
+  @media screen and (max-width: 996px) {
     .checkbox {
-      padding-right: 20px;
+        margin-left: 15px;
+    }
+  }
+  @media screen and (max-width: 996px) {
+    .login-href {
+        margin-left: 20px;
     }
   }
   
@@ -412,4 +423,3 @@ input[type="checkbox"] {
       width: 100%;
     }
   }
-  
