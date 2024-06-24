@@ -71,7 +71,7 @@ const DataGridComponent: React.FC<DataGridComponentProps> = (props) => {
   };
 
   let columns: GridColDef[] = [];
-  if (apiEndpoint === 'http://localhost:8080/api/users/') {
+  if (apiEndpoint === 'http://localhost:8090/api/users/') {
     columns = [
       { field: 'userId', headerName: 'User ID', width: 180, editable: true },
       { field: 'firstName', headerName: 'First Name', width: 180, editable: true },
@@ -136,7 +136,7 @@ const DataGridComponent: React.FC<DataGridComponentProps> = (props) => {
         },
       },
     ];
-  }  else if (apiEndpoint === 'http://localhost:8080/api/candidates/') {
+  }  else if (apiEndpoint === 'http://localhost:8090/api/candidates/') {
     columns = [
       { field: 'candidateId', headerName: 'CandidateId', width: 180, editable: true },
       { field: 'candidateName', headerName: 'CandidateName', width: 180, editable: true },
@@ -207,7 +207,7 @@ const DataGridComponent: React.FC<DataGridComponentProps> = (props) => {
       },
     ];
   } 
-  else if (apiEndpoint === 'http://localhost:8080/api/clients/') {
+  else if (apiEndpoint === 'http://localhost:8090/api/clients/') {
     columns = [
       { field: 'clientId', headerName: 'clientId', width: 180, editable: true },
       { field: 'clientName', headerName: 'clientName', width: 180, editable: true },

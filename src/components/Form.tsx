@@ -123,7 +123,7 @@ function Form() {
         console.log("Form Data:", formData);
     
         try {
-            const response = await fetch('http://localhost:8080/api/requirement', {
+            const response = await fetch('http://localhost:8090/api/requirement', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -167,7 +167,7 @@ function Form() {
                     }))
                 };
     
-                const emailResponse = await fetch('http://localhost:8080/api/job-approval', {
+                const emailResponse = await fetch('http://localhost:8090/api/job-approval', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

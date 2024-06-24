@@ -66,7 +66,7 @@ function Register() {
               // email: formData.email,
               // confirmPassword: formData.confirmPassword
 
-            const response = await fetch(`http://localhost:8080/api/auth/register?inviteToken=${inviteToken }`, {
+            const response = await fetch(`http://localhost:8090/api/auth/register?inviteToken=${inviteToken }`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

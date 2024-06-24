@@ -16,7 +16,7 @@ function EditToolbar(props) {
 
 
         try {
-            const response = await fetch('http://localhost:8080/api/users/user', {
+            const response = await fetch('http://localhost:8090/api/users/user', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

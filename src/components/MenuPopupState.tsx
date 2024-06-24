@@ -25,7 +25,7 @@ export default function MenuPopupState() {
 
     const handleLogoutConfirm = async () => {
         try {
-            await fetch("http://localhost:8080/api/logout", {
+            await fetch("http://localhost:8090/api/logout", {
                 method: "POST",
                 credentials: 'include'
             });

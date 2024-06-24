@@ -56,10 +56,10 @@ const Navbar = () => {
     }, 1000);
   };
 
-  const handleLoadCandidatesClick = () => handleLoadData('candidates', 'http://localhost:8080/api/candidates/status');
-  const handleLoadClientsClick = () => handleLoadData('clients', 'http://localhost:8080/api/clients/clientPositions');
-  const handleLoadUsersClick = () => handleLoadData('users', 'http://localhost:8080/api/users/');
-  const handleloadlistClients = () => handleLoadData('loadclients', 'http://localhost:8080/api/clients/');
+  const handleLoadCandidatesClick = () => handleLoadData('candidates', 'http://localhost:8090/api/candidates/status');
+  const handleLoadClientsClick = () => handleLoadData('clients', 'http://localhost:8090/api/clients/clientPositions');
+  const handleLoadUsersClick = () => handleLoadData('users', 'http://localhost:8090/api/users/');
+  const handleloadlistClients = () => handleLoadData('loadclients', 'http://localhost:8090/api/clients/');
 
   const GridContainer = styled.div`
     display: ${showGrid ? 'block' : 'none'};

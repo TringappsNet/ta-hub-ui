@@ -33,7 +33,7 @@ const List = () => {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/tasks/');
+        const response = await fetch('http://localhost:8090/api/tasks/');
         if (response.ok) {
           const data = await response.json();
           setRows(data);
@@ -67,7 +67,7 @@ const List = () => {
     const updatedRow = rows.find(row => row.taskId === id);
     
     try {
-      const response = await fetch(`http://localhost:8080/api/tasks/task/${id}`, {
+      const response = await fetch(`http://localhost:8090/api/tasks/task/${id}`, {
         method: 'PUT', // Using PUT for update
         headers: {
           'Content-Type': 'application/json',
@@ -97,7 +97,7 @@ const List = () => {
 
   const handleDeleteConfirm = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/api/tasks/task/${deleteId}`, { method: 'DELETE' });
+      const response = await fetch(`http://localhost:8090/api/tasks/task/${deleteId}`, { method: 'DELETE' });
       if (response.ok) {
         setRows(rows.filter((row) => row.taskId !== deleteId));
         handleOpenSnackbar('Record deleted successfully!', 'success');

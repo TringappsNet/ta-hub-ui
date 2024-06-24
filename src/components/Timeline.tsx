@@ -18,7 +18,7 @@ const Timeline = () => {
   useEffect(() => {
     const fetchColumns = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/board/columns');
+        const response = await fetch('http://localhost:8090/api/board/columns');
         if (response.ok) {
           const data = await response.json();
           // Set columns based on received data
@@ -50,7 +50,7 @@ const Timeline = () => {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/tasks/');
+        const response = await fetch('http://localhost:8090/api/tasks/');
         if (response.ok) {
           const data = await response.json();
           setTasks(data);
@@ -78,7 +78,7 @@ const Timeline = () => {
     event.dataTransfer.clearData();
 
     try {
-      await fetch(`http://localhost:8080/api/tasks/task/${droppedTask.taskId}`, {
+      await fetch(`http://localhost:8090/api/tasks/task/${droppedTask.taskId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -99,7 +99,7 @@ const Timeline = () => {
     setShowAddForm(false);
     setNewTaskStatus("");
     try {
-      const response = await fetch('http://localhost:8080/api/board/column', {
+      const response = await fetch('http://localhost:8090/api/board/column', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -133,7 +133,7 @@ const Timeline = () => {
   const handleConfirmDelete = async () => {
     if (deleteItemType === "column") {
       try {
-        const response = await fetch(`http://localhost:8080/api/board/column/${deleteItemId}`, {
+        const response = await fetch(`http://localhost:8090/api/board/column/${deleteItemId}`, {
           method: 'DELETE',
         });
         if (response.ok) {
@@ -148,7 +148,7 @@ const Timeline = () => {
       }
     } else if (deleteItemType === "task") {
       try {
-        const response = await fetch(`http://localhost:8080/api/tasks/task/${deleteItemId}`, {
+        const response = await fetch(`http://localhost:8090/api/tasks/task/${deleteItemId}`, {
           method: 'DELETE',
         });
         if (response.ok) {

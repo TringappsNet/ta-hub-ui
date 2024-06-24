@@ -27,7 +27,7 @@ export default function ApprovalRequest() {
 
   const approveRequirement = async (token: string) => {
     try {
-      const response = await fetch(`http://localhost:8080/api/approve-requirement?token=${token}`, {
+      const response = await fetch(`http://localhost:8090/api/approve-requirement?token=${token}`, {
         method: 'POST',
       });
 

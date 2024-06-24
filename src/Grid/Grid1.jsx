@@ -63,11 +63,11 @@ import ConfirmDialog from '../Grid/ConfirmationDialog';
                 setRows((oldRows) => [...oldRows, newEmptyRow]);
     
                 // Dispatch action to add new row to Redux store
-                if (apiEndpoint === 'http://localhost:8080/api/users/') {
+                if (apiEndpoint === 'http://localhost:8090/api/users/') {
                     dispatch(addNewUser(newEmptyRow));
-                } else if (apiEndpoint === 'http://localhost:8080/api/candidates/') {
+                } else if (apiEndpoint === 'http://localhost:8090/api/candidates/') {
                     dispatch(addNewCandidate(newEmptyRow));
-                } else if (apiEndpoint === 'http://localhost:8080/api/clients/') {
+                } else if (apiEndpoint === 'http://localhost:8090/api/clients/') {
                     dispatch(addNewClient(newEmptyRow));
                 }
     
@@ -123,13 +123,13 @@ import ConfirmDialog from '../Grid/ConfirmationDialog';
     useEffect(() => {
         async function fetchData() {
             const data = await fetchDataFromAPI(apiEndpoint);
-            if (apiEndpoint === 'http://localhost:8080/api/users/') {
+            if (apiEndpoint === 'http://localhost:8090/api/users/') {
                 dispatch(setUsers(data));
                 
                 console.log("datas",data);
-            } else if (apiEndpoint === 'http://localhost:8080/api/clients/') {
+            } else if (apiEndpoint === 'http://localhost:8090/api/clients/') {
                 dispatch(setClients(data));
-            } else if (apiEndpoint === 'http://localhost:8080/api/candidates/') {
+            } else if (apiEndpoint === 'http://localhost:8090/api/candidates/') {
                 dispatch(setCandidates(data));
             }
             setRows(data);
@@ -172,19 +172,19 @@ import ConfirmDialog from '../Grid/ConfirmationDialog';
                 return;
             }
     
-            if (apiEndpoint === 'http://localhost:8080/api/users/') {
+            if (apiEndpoint === 'http://localhost:8090/api/users/') {
                 const userId = rowData.userId;
                 dispatch(deleteUserOnServer(userId));
                 dispatch(deleteUser(userId));
                 handleOpenSnackbar('Record deleted successfully!', 'success');
 
-            } else if (apiEndpoint === 'http://localhost:8080/api/candidates/') {
+            } else if (apiEndpoint === 'http://localhost:8090/api/candidates/') {
                 const candidateId = rowData.candidateId;
                 dispatch(deleteCandidateOnServer(candidateId));
                 dispatch(deleteCandidate(candidateId));
                 handleOpenSnackbar('Record deleted successfully!', 'success');
 
-            } else if (apiEndpoint === 'http://localhost:8080/api/clients/') {
+            } else if (apiEndpoint === 'http://localhost:8090/api/clients/') {
                 const clientId = rowData.clientId;
                 dispatch(deleteClientOnServer(clientId));
                 dispatch(deleteClient(clientId));
@@ -222,14 +222,14 @@ import ConfirmDialog from '../Grid/ConfirmationDialog';
 
     const processRowUpdate = (rowUpdate, row) => {
         const newRow = { ...row, ...rowUpdate };
-            if (apiEndpoint === 'http://localhost:8080/api/users/') {
+            if (apiEndpoint === 'http://localhost:8090/api/users/') {
             dispatch(updateUser(newRow));
 
             dispatch(updateUserOnServer(newRow));
             handleOpenSnackbar('Record Updated successfully!', 'success');
 
             console.log("User updated successfully:", newRow);
-        } else if (apiEndpoint === 'http://localhost:8080/api/candidates/') {
+        } else if (apiEndpoint === 'http://localhost:8090/api/candidates/') {
             console.log("newcandiaterow",newRow);
    
         dispatch(updateCandidate(newRow));
@@ -237,7 +237,7 @@ import ConfirmDialog from '../Grid/ConfirmationDialog';
             handleOpenSnackbar('Record Updated successfully!', 'success');
 
             console.log("Candidate updated successfully:", newRow);
-        } else if (apiEndpoint === 'http://localhost:8080/api/clients/') {
+        } else if (apiEndpoint === 'http://localhost:8090/api/clients/') {
             dispatch(updateClient(newRow));
             dispatch(updateClientOnServer(newRow));
             handleOpenSnackbar('Record Updated successfully!', 'success');
@@ -254,7 +254,7 @@ import ConfirmDialog from '../Grid/ConfirmationDialog';
 
     let columns= [];
 
-    if (apiEndpoint === 'http://localhost:8080/api/users/') {
+    if (apiEndpoint === 'http://localhost:8090/api/users/') {
         columns = [
         { field: 'userId', headerName: 'User ID', width:100, editable: true , headerAlign: 'center', align:'center'} ,
         { field: 'firstName', headerName: 'First Name', width: 100, editable: true, headerAlign: 'center', align:'center' },
@@ -322,7 +322,7 @@ import ConfirmDialog from '../Grid/ConfirmationDialog';
             },
         },
         ];
-    }  else if (apiEndpoint === 'http://localhost:8080/api/candidates/') {
+    }  else if (apiEndpoint === 'http://localhost:8090/api/candidates/') {
         columns = [
         { field: 'candidateId', headerName: 'CandidateId', width: 100, editable: true, headerAlign: 'center', align:'center'},
         { field: 'candidateName', headerName: 'CandidateName', width: 100, editable: true , headerAlign: 'center', align:'center'},
@@ -396,7 +396,7 @@ import ConfirmDialog from '../Grid/ConfirmationDialog';
         },
         ];
     } 
-    else if (apiEndpoint === 'http://localhost:8080/api/clients/') {
+    else if (apiEndpoint === 'http://localhost:8090/api/clients/') {
         columns = [
         { field: 'clientId', align:'center', headerName: 'clientId', width: 100, editable: true,    headerAlign: 'center',
  },
