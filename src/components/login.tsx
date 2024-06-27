@@ -60,7 +60,7 @@ function Login() {
 
         try {
             setLoading(true);  // Start loader
-            const response = await fetch("http://localhost:8090/api/auth/login", {
+            const response = await fetch("http://localhost:8080/api/auth/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -111,7 +111,7 @@ function Login() {
 
     const handleGoogleSignIn = async () => {
         try {
-            const response = await fetch("http://localhost:8090/api/google-sign-in", {
+            const response = await fetch("http://localhost:8080/api/google-sign-in", {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"
