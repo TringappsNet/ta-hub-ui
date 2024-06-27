@@ -26,7 +26,7 @@ import MuiAlert from '@mui/material/Alert';
 import ConfirmDialog from '../Grid/ConfirmationDialog';
 import fetchDataFromAPI from '../Grid/FetchApi';
 // import EditToolbar from "../Grid/EditToolbar";
-// import "../styles/FullFeaturedCrudGrid.css";
+import "../styles/FullFeaturedCrudGrid.css";
 
 import { handleUserAdd } from '../GlobalRedux/Features/usersSlice';
 function EditToolbar(props) {
@@ -78,18 +78,14 @@ useEffect(() => {
     async function fetchData() {
         const data = await fetchDataFromAPI(apiEndpoint);
         if (apiEndpoint === 'http://localhost:8090/api/users/') {
-        if (apiEndpoint === 'http://localhost:8090/api/users/') {
             dispatch(setUsers(data));
             
             console.log("datas",data);
         } else if (apiEndpoint === 'http://localhost:8090/api/clients/clientPositions') {
-        } else if (apiEndpoint === 'http://localhost:8090/api/clients/clientPositions') {
             dispatch(setClients(data));
-        } else if (apiEndpoint === 'http://localhost:8090/api/candidates/status') {
         } else if (apiEndpoint === 'http://localhost:8090/api/candidates/status') {
             dispatch(setCandidates(data));
         }
-        else if (apiEndpoint === 'http://localhost:8090/api/clients/') {
         else if (apiEndpoint === 'http://localhost:8090/api/clients/') {
             // dispatch(setCandidates(data));
             setRows(data);
@@ -152,20 +148,17 @@ const handleConfirmDelete = async () => {
         }
 
         if (apiEndpoint === 'http://localhost:8090/api/users/') {
-        if (apiEndpoint === 'http://localhost:8090/api/users/') {
             const userId = rowData.userId;
             dispatch(deleteUserOnServer(userId));
             dispatch(deleteUser(userId));
             handleOpenSnackbar('Record deleted successfully!', 'success');
 
         } else if (apiEndpoint === 'http://localhost:8090/api/candidates/status') {
-        } else if (apiEndpoint === 'http://localhost:8090/api/candidates/status') {
             const candidateId = rowData.candidateId;
             dispatch(deleteCandidateOnServer(candidateId));
             dispatch(deleteCandidate(candidateId));
             handleOpenSnackbar('Record deleted successfully!', 'success');
 
-        } else if (apiEndpoint === 'http://localhost:8090/api/clients/clientPositions ' || apiEndpoint === 'http://localhost:8080/api/clients/' ) {
         } else if (apiEndpoint === 'http://localhost:8090/api/clients/clientPositions ' || apiEndpoint === 'http://localhost:8080/api/clients/' ) {
             const clientId = rowData.clientId;
             dispatch(deleteClientOnServer(clientId));
@@ -223,12 +216,10 @@ const processRowUpdate = async (rowUpdate, row) => {
         } else {
          
             if (apiEndpoint === 'http://localhost:8090/api/users/') {
-            if (apiEndpoint === 'http://localhost:8090/api/users/') {
                 await updateUserOnServer(newRow);
                 handleOpenSnackbar('User Updated successfully!', 'success');
             } else if (apiEndpoint === 'http://localhost:8090/api/candidates/status') {
 
-                const response = await fetch(`http://localhost:8090/api/candidates/candidate/${newRow.candidateId}`, {
                 const response = await fetch(`http://localhost:8090/api/candidates/candidate/${newRow.candidateId}`, {
       method: 'PUT',
       headers: {
@@ -244,8 +235,6 @@ const processRowUpdate = async (rowUpdate, row) => {
                 // await updateCandidateOnServer(newRow);
                 // console.log("candidate row",newRow)
                 handleOpenSnackbar('Candidate Updated successfully!', 'success');
-            } else if (apiEndpoint === 'http://localhost:8090/api/clients/clientPositions') {
-                const response = await fetch(`http://localhost:8090/api/clients/client/${newRow.clientId}`, {
             } else if (apiEndpoint === 'http://localhost:8090/api/clients/clientPositions') {
                 const response = await fetch(`http://localhost:8090/api/clients/client/${newRow.clientId}`, {
                     method: 'PUT',
@@ -292,7 +281,6 @@ const handleAddClick = () => {
 let columns= [];
 
 if (apiEndpoint === 'http://localhost:8090/api/users/') {
-if (apiEndpoint === 'http://localhost:8090/api/users/') {
     columns = [
         { field: 'userId', headerName: 'USER ID', width: 140, editable: true, headerAlign: 'center', align: 'center', headerClassName: 'custom-header' },
         { field: 'firstName', headerName: 'FIRST NAME', width: 140, editable: true, headerAlign: 'center', align: 'center', headerClassName: 'custom-header' },
@@ -309,7 +297,6 @@ if (apiEndpoint === 'http://localhost:8090/api/users/') {
     
     {
         field: 'actions',
-        type: 'actions',
         headerClassName: 'custom-header',
         headerName: 'Actions',
         width: 100,
@@ -362,6 +349,7 @@ if (apiEndpoint === 'http://localhost:8090/api/users/') {
         },
     },
     ];
+    
 }  else if (apiEndpoint === 'http://localhost:8090/api/candidates/status') {
     columns = [
         { field: 'candidateId', headerName: 'CANDIDATEID', width: 140, editable: true, headerAlign: 'center', align:'center',headerClassName: 'custom-header'},
@@ -507,18 +495,18 @@ else if (apiEndpoint === 'http://localhost:8090/api/clients/clientPositions') {
 } 
 else if (apiEndpoint === 'http://localhost:8090/api/clients/') {
     columns = [
-        { field: 'clientId', align:'center', headerName: 'CLIENTID', width: 140, editable: true,    headerAlign: 'center',    headerClassName: 'custom-header',
+        { field: 'clientId', align:'center', headerName: 'CLIENTID', width: 180, editable: true,    headerAlign: 'center',    headerClassName: 'custom-header',
 
     },
-        { field: 'clientName', align:'center',headerName: 'CLIENTNAME', width: 140, editable: true ,    headerAlign: 'center',headerClassName: 'custom-header',
+        { field: 'clientName', align:'center',headerName: 'CLIENTNAME', width: 180, editable: true ,    headerAlign: 'center',headerClassName: 'custom-header',
     },
-        { field: 'clientSpocName', align:'center',headerName: 'CLIENTSPOCNAME', width: 140, editable: true,    headerAlign: 'center',headerClassName: 'custom-header',
+        { field: 'clientSpocName', align:'center',headerName: 'CLIENTSPOCNAME', width: 180, editable: true,    headerAlign: 'center',headerClassName: 'custom-header',
     },
-        { field: 'clientSpocContact', align:'center',headerName: 'CLIENTSPOCCONTACT', width: 140, editable: true ,    headerAlign: 'center',headerClassName: 'custom-header',
+        { field: 'clientSpocContact', align:'center',headerName: 'CLIENTSPOCCONTACT', width: 180, editable: true ,    headerAlign: 'center',headerClassName: 'custom-header',
     },
-        { field: 'clientLocation', align:'center',headerName: 'CLIENTLOCATION', width: 250, editable: true,    headerAlign: 'center',headerClassName: 'custom-header',
+        { field: 'clientLocation', align:'center',headerName: 'CLIENTLOCATION', width: 180, editable: true,    headerAlign: 'center',headerClassName: 'custom-header',
     },
-        { field: 'createdAt', align:'center',headerName: 'CREATEDAT', width: 390, editable: true,    headerAlign: 'center',headerClassName: 'custom-header',
+        { field: 'createdAt', align:'center',headerName: 'CREATEDAT', width: 180, editable: true,    headerAlign: 'center',headerClassName: 'custom-header',
     },
 
     {
@@ -626,6 +614,7 @@ else if (apiEndpoint === 'http://localhost:8090/api/clients/') {
         </Button>
         <DataGrid
                     rowHeight={34}
+                    
 
             rows={filteredRows}
             columns={columns}
