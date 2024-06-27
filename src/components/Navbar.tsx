@@ -14,7 +14,7 @@ import Board from './Dnd';
 import Timeline from './Timeline';
 import List from './List';
 import Loader from  "../components/Loader";
-
+import Candidates from "../Grid/Candidates";
 const Navbar = () => {
   const [showGrid, setShowGrid] = useState(false);
   const [apiEndpoint, setApiEndpoint] = useState('');
@@ -56,11 +56,25 @@ const Navbar = () => {
     }, 1000);
   };
 
-  const handleLoadCandidatesClick = () => handleLoadData('candidates', 'http://localhost:8080/api/candidates/status');
-  const handleLoadClientsClick = () => handleLoadData('clients', 'http://localhost:8080/api/clients/clientPositions');
-  const handleLoadUsersClick = () => handleLoadData('users', 'http://localhost:8080/api/users/');
-  const handleloadlistClients = () => handleLoadData('loadclients', 'http://localhost:8080/api/clients/');
-
+  const handleLoadCandidatesClick = () => {
+    history.pushState(null, '', '/candidates'); 
+    handleLoadData('candidates', 'http://localhost:8080/api/candidates/status');
+  };
+  
+  const handleLoadClientsClick = () => {
+    history.pushState(null, '', '/positions');
+    handleLoadData('clients', 'http://localhost:8080/api/clients/clientPositions');
+  };
+  
+  const handleLoadUsersClick = () => {
+    history.pushState(null, '', '/users');
+    handleLoadData('users', 'http://localhost:8080/api/users/');
+  };
+  
+  const handleloadlistClients = () => {
+    history.pushState(null, '', '/clients');
+    handleLoadData('loadclients', 'http://localhost:8080/api/clients/');
+  };
   const GridContainer = styled.div`
     display: ${showGrid ? 'block' : 'none'};
     width: 100%;
@@ -133,6 +147,8 @@ const Navbar = () => {
       ) : showGrid ? (
         <GridContainer>
           <FullFeaturedCrudGrid apiEndpoint={apiEndpoint} />
+          
+          
         </GridContainer>
       ) : (
         <>

@@ -10,6 +10,8 @@ import Board from "./components/Dnd";
 // import Dashboard from "./components/Dashboard";
 import Sidebar from "./components/Sidebar";
 import ApprovalRequest from "./components/ApprovalRequest";
+import FullFeaturedCrudGrid from "./Grid/FullFeaturedCrudGrid";
+import Candidates from "./Grid/Candidates";
 
 const App = () => {
   return (
@@ -26,11 +28,13 @@ const App = () => {
             <Route path="/side-bar" element={<Sidebar/>} />
             <Route path="/side-bar" element={<Sidebar/>} />
             <Route path="/approval-req" element={<ApprovalRequest/>} /> 
+            {/*<Route path="/candidates" element={<Candidates/>}/>/*}
+                
             {/* <Route path="/board" element={<Board/>} /> */}
             
             {/* <Route path="/dashboard" element={<Dashboard/>} /> */}
 
-
+            
 
           </Route>
         </Routes>
