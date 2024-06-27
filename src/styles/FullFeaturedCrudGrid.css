@@ -1,12 +1,19 @@
-.custom-header {
-    font-weight:bolder;
-    color:black; 
-    text-transform: uppercase;
-    
-    
-    
+
+.MuiDataGrid-cell{
+    color: rgb(61, 60, 60);
+    border-right: 1px solid #010101;
+  }
+
+  .custom-header {
+    background-color: #2A3F54;
+    color: #FFFFFF;
+    font-weight: bold;
+    text-align: center;
+    cursor: default; 
+    pointer-events: none;
   }
   
-  .MuiDataGrid-cell{
-    color: rgb(61, 60, 60);
+  .custom-header:hover {
+    background-color: #2A3F54; 
+    color: #FFFFFF; 
   }

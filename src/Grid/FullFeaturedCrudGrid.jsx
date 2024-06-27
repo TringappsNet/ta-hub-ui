@@ -26,7 +26,7 @@ import MuiAlert from '@mui/material/Alert';
 import ConfirmDialog from '../Grid/ConfirmationDialog';
 import fetchDataFromAPI from '../Grid/FetchApi';
 // import EditToolbar from "../Grid/EditToolbar";
-// import "../styles/FullFeaturedCrudGrid.css";
+import "../styles/FullFeaturedCrudGrid.css";
 
 import { handleUserAdd } from '../GlobalRedux/Features/usersSlice';
 function EditToolbar(props) {
@@ -508,18 +508,18 @@ else if (apiEndpoint === 'http://localhost:8080/api/clients/clientPositions') {
 } 
 else if (apiEndpoint === 'http://localhost:8080/api/clients/') {
     columns = [
-        { field: 'clientId', align:'center', headerName: 'CLIENTID', width: 140, editable: true,    headerAlign: 'center',    headerClassName: 'custom-header',
+        { field: 'clientId', align:'center', headerName: 'CLIENTID', width: 180, editable: true,    headerAlign: 'center',    headerClassName: 'custom-header',
 
     },
-        { field: 'clientName', align:'center',headerName: 'CLIENTNAME', width: 140, editable: true ,    headerAlign: 'center',headerClassName: 'custom-header',
+        { field: 'clientName', align:'center',headerName: 'CLIENTNAME', width: 180, editable: true ,    headerAlign: 'center',headerClassName: 'custom-header',
     },
-        { field: 'clientSpocName', align:'center',headerName: 'CLIENTSPOCNAME', width: 140, editable: true,    headerAlign: 'center',headerClassName: 'custom-header',
+        { field: 'clientSpocName', align:'center',headerName: 'CLIENTSPOCNAME', width: 180, editable: true,    headerAlign: 'center',headerClassName: 'custom-header',
     },
-        { field: 'clientSpocContact', align:'center',headerName: 'CLIENTSPOCCONTACT', width: 140, editable: true ,    headerAlign: 'center',headerClassName: 'custom-header',
+        { field: 'clientSpocContact', align:'center',headerName: 'CLIENTSPOCCONTACT', width: 180, editable: true ,    headerAlign: 'center',headerClassName: 'custom-header',
     },
-        { field: 'clientLocation', align:'center',headerName: 'CLIENTLOCATION', width: 250, editable: true,    headerAlign: 'center',headerClassName: 'custom-header',
+        { field: 'clientLocation', align:'center',headerName: 'CLIENTLOCATION', width: 180, editable: true,    headerAlign: 'center',headerClassName: 'custom-header',
     },
-        { field: 'createdAt', align:'center',headerName: 'CREATEDAT', width: 390, editable: true,    headerAlign: 'center',headerClassName: 'custom-header',
+        { field: 'createdAt', align:'center',headerName: 'CREATEDAT', width: 180, editable: true,    headerAlign: 'center',headerClassName: 'custom-header',
     },
 
     {
