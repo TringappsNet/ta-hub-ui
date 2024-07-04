@@ -257,32 +257,46 @@ function Form() {
   const handleClose = () => {
     setIsOpen(false);
 };
+
 const handleAddPosition = () => {
-  const newPosition: Position = {
-      id: positions.length ? positions[positions.length - 1].id + 1 : 0,
-      jobTitle: '',
-      noOfOpenings: '',
-      roleType: '',
-      modeOfWork: '',
-      workLocation: '',
-      yearsOfExperienceRequired: '',
-      primarySkillSet: '',
-      secondarySkillSet: '',
+  const newPosition = {
+    id: positions.length > 0 ? positions[positions.length - 1].id + 1 : 0,
+    jobTitle: '',
+    noOfOpenings: '',
+    roleType: '',
+    modeOfWork: '',
+    workLocation: '',
+    yearsOfExperienceRequired: '',
+    primarySkillSet: '',
+    secondarySkillSet: '',
   };
-  setPositions([...positions, newPosition]);
+
+  // Add new position at the beginning
+  setPositions([newPosition, ...positions]);
   setRowModesModel((prevModel) => ({
-      ...prevModel,
-      [newPosition.id]: { mode: GridRowModes.Edit, fieldToFocus: 'jobTitle' },
+    ...prevModel,
+    [newPosition.id]: { mode: GridRowModes.Edit, fieldToFocus: 'jobTitle' },
   }));
 };
 
+const handleSavePosition = (id) => () => {
+  setRowModesModel((prevModel) => ({
+    ...prevModel,
+    [id]: { mode: GridRowModes.View }
+  }));
 
-  const handleSavePosition = (id: GridRowId) => () => {
-    setRowModesModel((prevModel) => ({
-      ...prevModel,
-      [id]: { mode: GridRowModes.View }
-    }));
-  };
+  setPositions((prevPositions) => {
+    const index = prevPositions.findIndex((position) => position.id === id);
+    if (index === -1) return prevPositions;
+
+    const updatedPositions = [...prevPositions];
+    const [savedPosition] = updatedPositions.splice(index, 1);
+    updatedPositions.push(savedPosition);
+
+    return updatedPositions;
+  });
+};
+
 
   const handleDeletePosition = (id: GridRowId) => () => {
     setPositions((prevPositions) => prevPositions.filter((pos) => pos.id !== id));
@@ -317,7 +331,7 @@ const handleAddPosition = () => {
       <Select
         value={value}
         onChange={handleChange}
-        sx={{ width: '100%' }}
+        sx={{ width: '100%'}}
       >
         {options.map((option) => (
           <MenuItem key={option.value} value={option.value}>
@@ -525,9 +539,12 @@ const handleAddPosition = () => {
 
                                 {showPopup && (
                                 <SimplePopup onClose={handleClosePopup}>
-                                    <Button onClick={handleAddPosition}>Add Position</Button>
+                                    <FaTimes className="close-icon pl-2 move-left-close-icon" onClick={handleClose} style={{ marginLeft: '1148px', marginTop: '-10',display: 'flex', alignItems: 'center' }} />
+                                    <Button onClick={handleAddPosition} style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', marginBottom: '10px' }}>Add Position</Button>
                                     <div style={{ height: '89%', width: '100%' }}>
+                                    
                                     <DataGrid
+                                        className = "custom-data-grid"
                                         rows={positions}
                                         columns={columns}
                                         editMode="row"
@@ -563,14 +580,14 @@ const handleAddPosition = () => {
                                         <div className="form-group">
                                             <label htmlFor="modeOfInterview" className="form-label">Mode of Interview</label>
                                             <select 
-                                                className="input-box" 
+                                                className="input-box"
                                                 name="modeOfInterview" 
                                                 value={modeOfInterviews} 
                                                 onChange={(e) => setModeOfInterviews(e.target.value)}                                                                                            >
                                                 <option value="">Select an option</option>
-                                                <option value="option1">Option 1</option>
-                                                <option value="option2">Option 2</option>
-                                                <option value="option3">Option 3</option>
+                                                <option value="option1">Online Interview</option>
+                                                <option value="option2">In-person Interview</option>
+                                                <option value="option3">Telephone/Mobile Interview</option>
                                             </select>
                                         </div>
                                     </div>
