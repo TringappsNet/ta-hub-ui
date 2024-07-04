@@ -28,6 +28,11 @@ interface Position {
   primarySkillSet: string;
   secondarySkillSet: string;
 }
+interface Client {
+    clientId: number; 
+    clientName: string;
+  
+}
 
 function Form() {      
     const [startDate, setStartDate] = useState<Date | null>(null);
@@ -36,7 +41,10 @@ function Form() {
     const [primarySkill, setPrimarySkill] = useState('');
     const [secondarySkill, setSecondarySkill] = useState('');
     const [isOpen, setIsOpen] = useState(true);
-    const [clientName, setClientName] = useState('');
+    const [clientNames, setClientNames] = useState<string[]>([]);
+    const [clientDetails, setClientDetails] = useState<Client[]>([]);
+    const [selectedClient, setSelectedClient] = useState<Client | null>(null);
+    const [clientName, setClientName] = useState<string>('');
     const [clientSpocName, setClientSpocName] = useState('');
     const [clientSpocContact, setClientSpocContact] = useState('');
     const [accountManager, setAccountManager] = useState('');
@@ -72,13 +80,60 @@ function Form() {
         const totalOpenings = positions.reduce((sum, position) => sum + parseInt(position.noOfOpenings, 10), 0);
         setNoOfOpenings(totalOpenings);
       }, [positions]);
+
+      useEffect(() => {
+        fetchClientDetails();
+    }, []);
+
+    const fetchClientDetails = async () => {
+        try {
+            const response = await fetch('http://localhost:8080/api/clients/');
+            if (!response.ok) {
+                throw new Error('Failed to fetch client details');
+            }
+            const data = await response.json();
+            setClientDetails(data);
+            const names = data.map(client => client.clientName);
+            setClientNames(names); 
+            
+        } catch (error) {
+            console.error('Error fetching client details:', error);
+        }
+    };
+    const handleClientChange = (selectedClientName: string) => {
+        const foundClient = clientDetails.find(client => client.clientName === selectedClientName);
+        if (foundClient) {
+            setSelectedClient(foundClient);
+            fetchClientAdditionalDetails(foundClient.clientId); 
+            console.log("Selected Client ID: ", foundClient.clientId);
+        } else {
+            setSelectedClient(null);
+        }
+    };
+      const fetchClientAdditionalDetails = async (clientId: number) => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/clients/client/${clientId}`);
+            if (!response.ok) {
+                throw new Error('Failed to fetch client details');
+            }
+            const clientData = await response.json();
+            setClientSpocName(clientData.clientSpocName);
+            setClientSpocContact(clientData.clientSpocContact);
+            console.log("Fetched Client Data: ", clientData);
+        } catch (error) {
+            console.error('Error fetching additional client details:', error);
+        }
+
+
+    };
+   
+    
       
 
       const submitFormHandler = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setFormSubmitted(true); 
      if (
-        !clientName ||
         !clientSpocName ||
         !reqStartDate ||
         !clientSpocContact ||
@@ -374,23 +429,26 @@ const handleAddPosition = () => {
                             <div className='fields'>
                                 <div className="form-group p-2">
                                     <label htmlFor="cname" className="form-label">Client Name</label>
-                                    <input 
-                                        type="text" 
+                                    <select
                                         style={{ borderColor: (formSubmitted && clientName.trim() === '') ? 'red' : '' }} 
                                         className="input-box" 
-                                        name="cname"  
-                                        value={clientName} 
-                                        onChange={(e) => setClientName(e.target.value)}  
-                                    />
+                                        id="clientSelect" 
+                                        value={selectedClient ? selectedClient.clientName : ''}
+                                        onChange={(e) => handleClientChange(e.target.value)}
+                                        >
+                                        <option value=""disabled>Select Client</option>
+                                        {clientNames.map((name, index) => (
+                                            <option key={index} value={name}>{name}</option>
+                                        ))}
+                                    </select>
                                 </div>
                                 <div className="form-group p-2">
                                     <label htmlFor="spocname" className="form-label">Client SPOC Name</label>
                                     <input 
                                         type="text" 
                                         className="input-box" 
-                                        name="spocname" 
-                                        value={clientSpocName} 
-                                        onChange={(e) => setClientSpocName(e.target.value)} 
+                                        value={clientSpocName}
+                                        readOnly
                                     />
                                 </div>
                                 <div className="form-group pt-3 p-2">
@@ -409,10 +467,9 @@ const handleAddPosition = () => {
                                     <label htmlFor="contact" className="form-label">Client Contact Details</label>
                                     <input 
                                         type="number" 
-                                        className="input-box" 
-                                        name="contact" 
-                                        value={clientSpocContact} 
-                                        onChange={(e) => setClientSpocContact(e.target.value)} 
+                                        className="input-box"
+                                        value={clientSpocContact}
+                                        readOnly
                                     />
                                 </div>
                                 <div className="form-group p-2">
