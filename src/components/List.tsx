@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import "../styles/Dnd.css";
 
+
 import ConfirmDialog from "../Grid/ConfirmationDialog";
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import Box from '@mui/material/Box';
@@ -126,8 +127,8 @@ const List = () => {
   };
 
   const columns = [
-    { field: 'taskId', headerName: 'TaskId', width: 100, editable: true, headerAlign: 'center', align: 'center' },
-    { field: 'jobId', headerName: 'JobId', width: 100, editable: true, headerAlign: 'center', align: 'center' },
+    //{ field: 'taskId', headerName: 'TaskId', width: 100, editable: true, headerAlign: 'center', align: 'center' },
+    //{ field: 'jobId', headerName: 'JobId', width: 100, editable: true, headerAlign: 'center', align: 'center' },
     { field: 'jobTitle', headerName: 'JobTitle', width: 100, editable: true, headerAlign: 'center', align: 'center' },
     { field: 'roleType', headerName: 'RoleType', width: 100, editable: true, headerAlign: 'center', align: 'center' },
     { field: 'modeOfWork', headerName: 'ModeOfWork', width: 140, editable: true, headerAlign: 'center', align: 'center' },
@@ -136,11 +137,11 @@ const List = () => {
     { field: 'assignedBudget', headerName: 'AssignedBudget', width: 100, editable: true, headerAlign: 'center', align: 'center' },
     { field: 'primaryAssignee', headerName: 'PrimaryAssignee', width: 100, editable: true, headerAlign: 'center', align: 'center' },
     { field: 'taskStatus', headerName: 'TaskStatus', width: 100, editable: true, headerAlign: 'center', align: 'center', cellClassName: 'super-app-theme--cell' },
-    { field: 'secondaryAssignee', headerName: 'SecondaryAssignee', width: 100, editable: true, headerAlign: 'center', align: 'center' },
-    { field: 'backlogs', headerName: 'Backlogs', width: 200, editable: true, headerAlign: 'center', align: 'center' },
+    //{ field: 'secondaryAssignee', headerName: 'SecondaryAssignee', width: 100, editable: true, headerAlign: 'center', align: 'center' },
+    //{ field: 'backlogs', headerName: 'Backlogs', width: 200, editable: true, headerAlign: 'center', align: 'center' },
     { field: 'description', headerName: 'Description', width: 200, editable: true, headerAlign: 'center', align: 'center' },
     { field: 'createdAt', headerName: 'CreatedAt', width: 200, editable: true, headerAlign: 'center', align: 'center' },
-    { field: 'lastUpdated', headerName: 'LastUpdated', width: 200, editable: true, headerAlign: 'center', align: 'center' },
+    //{ field: 'lastUpdated', headerName: 'LastUpdated', width: 200, editable: true, headerAlign: 'center', align: 'center' },
     {
       headerAlign: 'center',
       align: 'center',
@@ -206,11 +207,11 @@ const List = () => {
     <Box
       sx={{
         height: 700,
-        width: '94%',
-        paddingLeft: 10,
-        paddingTop: 5,
+        width: '100%',
+        paddingLeft: 2,
+        paddingTop: 0,
         paddingBottom:10,
-      
+        overflowX: 'hidden',
       }}
     >
       <Snackbar
@@ -229,7 +230,7 @@ const List = () => {
       </Snackbar>
       <DataGrid
         rowHeight={35}
-        checkboxSelection
+        //checkboxSelection
         disableRowSelectionOnClick
         rows={rows}
         columns={columns}
