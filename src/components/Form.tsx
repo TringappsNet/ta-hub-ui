@@ -511,7 +511,7 @@ const handleAddPosition = () => {
                                     <div className="col">
                                         <div className="form-group">
                                             <label htmlFor="modeOfInterview" className="form-label">Mode of Interview</label>
-                                            5<select 
+                                            <select 
                                                 className="input-box" 
                                                 name="modeOfInterview" 
                                                 value={modeOfInterviews} 
