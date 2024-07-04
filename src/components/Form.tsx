@@ -275,6 +275,9 @@ const handleAddPosition = () => {
   const processRowUpdate = (newRow: GridRowModel, oldRow: GridRowModel) => {
     // Check if any field in the new row is empty
     const isEmptyField = Object.keys(newRow).some(key => {
+      if (key === 'secondarySkillSet') {
+        return false;
+    }
       if (newRow[key] === '') {
           
           setSnackbarOpen(true);
