@@ -520,7 +520,7 @@ const handleAddPosition = () => {
                                     >
                                         <a href="#" className="add-icon" onClick={(e) => { e.preventDefault(); handleAddField(); }}> Add/View Positions</a>
                                     </Tooltip>
-                                </div>
+                                </div> 
                             </div>
 
                                 {showPopup && (
@@ -618,4 +618,4 @@ const handleAddPosition = () => {
         )
     );
 }
-export default Form;
+         export default Form;
