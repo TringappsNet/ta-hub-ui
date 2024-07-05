@@ -104,10 +104,12 @@ function Form() {
         const foundClient = clientDetails.find(client => client.clientName === selectedClientName);
         if (foundClient) {
             setSelectedClient(foundClient);
-            fetchClientAdditionalDetails(foundClient.clientId); 
+            setClientName(foundClient.clientName);
+            fetchClientAdditionalDetails(foundClient.clientId);
             console.log("Selected Client ID: ", foundClient.clientId);
         } else {
             setSelectedClient(null);
+            setClientName('');
         }
     };
       const fetchClientAdditionalDetails = async (clientId: number) => {
@@ -153,7 +155,8 @@ function Form() {
     
         const formData = [{
             requirementStartDate: reqStartDate?.toISOString(),
-            clientName,
+            clientId: selectedClient ? selectedClient.clientId : null,
+            clientName: selectedClient ? selectedClient.clientName : '',
             clientSpocName,
             clientSpocContact,
             accountManager,
