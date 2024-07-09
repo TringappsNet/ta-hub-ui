@@ -92,7 +92,6 @@ function Login() {
             setSnackbarOpen(true);
             setSnackbarMessage(DISPLAY_MSG.SERVER_PROB);
 
-            setSnackbarMessage(error.message1);
             setSnackbarVariant("error");
             }
         else{
