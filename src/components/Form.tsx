@@ -127,9 +127,6 @@ function Form() {
 
     };
    
-    
-      
-
       const submitFormHandler = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setFormSubmitted(true); 
