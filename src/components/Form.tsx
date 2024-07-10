@@ -104,10 +104,12 @@ function Form() {
         const foundClient = clientDetails.find(client => client.clientName === selectedClientName);
         if (foundClient) {
             setSelectedClient(foundClient);
-            fetchClientAdditionalDetails(foundClient.clientId); 
+            setClientName(foundClient.clientName);
+            fetchClientAdditionalDetails(foundClient.clientId);
             console.log("Selected Client ID: ", foundClient.clientId);
         } else {
             setSelectedClient(null);
+            setClientName('');
         }
     };
       const fetchClientAdditionalDetails = async (clientId: number) => {
@@ -150,7 +152,8 @@ function Form() {
     
         const formData = [{
             requirementStartDate: reqStartDate?.toISOString(),
-            clientName,
+            clientId: selectedClient ? selectedClient.clientId : null,
+            clientName: selectedClient ? selectedClient.clientName : '',
             clientSpocName,
             clientSpocContact,
             accountManager,
@@ -251,7 +254,10 @@ function Form() {
     setShowPopup(false);
   };
 
-  const handleClose = () => {
+  const handleCloseIcon1 = () => {
+    setIsOpen(false);
+};
+  const handleCloseIcon2 = () => {
     setIsOpen(false);
 };
 
@@ -374,7 +380,7 @@ const handleSavePosition = (id) => () => {
 
   const columns: GridColDef[] = [
     { field: 'jobTitle', headerName: 'Job Title', width: 150, editable: true },
-    { field: 'noOfOpenings', headerName: 'No. of Openings', width: 150, editable: true },
+    { field: 'noOfOpenings', headerName: 'No. of Openings', width: 150, editable: true, valueParser: (value) => (isNaN(value) || !Number.isInteger(Number(value)) ? null : Number(value)) },
     {
       field: 'roleType',
       headerName: 'Role Type',
@@ -390,7 +396,7 @@ const handleSavePosition = (id) => () => {
       renderEditCell: (params) => <DropdownEditCell {...params} />,
     },
     { field: 'workLocation', headerName: 'Work Location', width: 150, editable: true },
-    { field: 'yearsOfExperienceRequired', headerName: 'Years of Experience', width: 150, editable: true },
+    { field: 'yearsOfExperienceRequired', headerName: 'Years of Experience', width: 150, editable: true, valueParser: (value) => (isNaN(value) || !Number.isInteger(Number(value)) ? null : Number(value)) },
     { field: 'primarySkillSet', headerName: 'Primary Skill set', width: 150, editable: true },
     { field: 'secondarySkillSet', headerName: 'Secondary Skill set', width: 150, editable: true },
     {
@@ -440,7 +446,7 @@ const handleSavePosition = (id) => () => {
                     <form className='form-req' onSubmit={submitFormHandler}>
                         <div className='header-form'>
                             <h3>Client Requirement Form</h3>
-                            <FaTimes className="close-icon pl-2" onClick={handleClose} />
+                            <FaTimes className="close-icon pl-2" onClick={handleCloseIcon1} />
                         </div>
                         <div className="scrollable-area">
                             <div className='fields'>
@@ -542,7 +548,7 @@ const handleSavePosition = (id) => () => {
 
                                 {showPopup && (
                                 <SimplePopup onClose={handleClosePopup}>
-                                    <FaTimes className="close-icon pl-2 move-left-close-icon" onClick={handleClose} style={{ marginLeft: '1148px', marginTop: '-10',display: 'flex', alignItems: 'center' }} />
+                                    <FaTimes className="close-icon move-left-close-icon" onClick={handleCloseIcon2} style={{ marginLeft: '1148px', marginTop: '-10',display: 'flex', alignItems: 'center'}} />
                                     <Button onClick={handleAddPosition} style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', marginBottom: '10px' }}>Add Position</Button>
                                     <div style={{ height: '89%', width: '100%' }}>
                                     
