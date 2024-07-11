@@ -62,7 +62,7 @@
     width: 235%;
     min-height: 45px;
     padding: 8px;
-    margin-bottom: 10px;
+    margin-bottom: -10px;
     border: 2px solid #e9e8e8;
     border-radius: 4px;
   }
@@ -107,7 +107,7 @@
   .input-box {
     width: 99%;
     padding: 8px;
-    margin-bottom: 10px;
+    margin-bottom: -10px;
     border: 2px solid #e9e8e8;
     border-radius: 4px;
     min-height: 45px;
@@ -152,7 +152,7 @@ input[type="number"] {
     padding-right: 30%;
     padding-left: 10px;
     width: 99%;
-    margin-bottom: 10px;
+    margin-bottom: -10px;
     border: 2px solid #e9e8e8;
     border-radius: 4px;
     min-height: 45px;
