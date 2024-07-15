@@ -1,9 +1,9 @@
 import { TextField } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import '../styles/login.css';
 import CustomSnackbar from "./CustomSnackbar";
-// import Loader from "./Loader"; 
+import GoogleSign from "./GoogleSign";
 
 function Login() {
     const [email, setEmail] = useState("");
@@ -12,7 +12,10 @@ function Login() {
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("");
     const [snackbarVariant, setSnackbarVariant] = useState('success');
-    const [loading, setLoading] = useState(false);  // Loader state
+    const [loading, setLoading] = useState(false);
+    const [accessToken, setAccessToken] = useState(null);
+
+    
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -21,21 +24,12 @@ function Login() {
         const isEmailValid = emailRegex.test(email);
         const isPasswordValid = password.length >= 8;
         const userCredentials = { email, password };
-        const DISPLAY_MSG={
-            EMPTY_FIELD:"Please fill all fields!",
-            EMAIL:"Invalid email address!",
+        const DISPLAY_MSG = {
+            EMPTY_FIELD: "Please fill all fields!",
+            EMAIL: "Invalid email address!",
             PASSWORD: "Password must be at least 8 characters long!",
             SERVER_PROB: "Oops! Something went wrong on our end. Please try again later.",
-         }
-
-        // const userCredentials = { email, password };
-        // const DISPLAY_MSG={
-        //     EMPTY_FIELD:"Please fill all fields!",
-        //     EMAIL:"Invalid email address!",
-        //     PASSWORD: "Password must be at least 8 characters long!",
-        //     CLIENT_PROB: "Oops! Please try again later.",
-        //  }
-
+        };
 
         if (!email || !password) {
             setSnackbarOpen(true);
@@ -59,7 +53,7 @@ function Login() {
         }
 
         try {
-            setLoading(true);  // Start loader
+            setLoading(true);
             const response = await fetch("http://localhost:8080/api/auth/login", {
                 method: "POST",
                 headers: {
@@ -74,37 +68,27 @@ function Login() {
 
             const data = await response.json();
             const { sessionId, message } = data;
-    
+
             localStorage.setItem('isLoggedIn', 'true');
-            localStorage.setItem('email',userCredentials.email);
+            localStorage.setItem('email', userCredentials.email);
             localStorage.setItem('sessionId', sessionId);
             setSnackbarOpen(true);
             setSnackbarMessage(message);
             setSnackbarVariant("success");
             setTimeout(() => {
-                setLoading(false);  // Stop loader before navigation
-                navigate('/navbar'); 
+                setLoading(false);
+                navigate('/navbar'); // Navigate to the navbar route
             }, 2000);
 
         } catch (error) {
             console.error("Error logging in:", error.message);
-            if(error.message === "Failed to fetch"){
             setSnackbarOpen(true);
-            setSnackbarMessage(DISPLAY_MSG.SERVER_PROB);
-
-            setSnackbarMessage(error.message1);
-            setSnackbarVariant("error");
-            }
-        else{
-            setSnackbarOpen(true);
-            setSnackbarMessage(error.message);
+            setSnackbarMessage(error.message === "Failed to fetch" ? DISPLAY_MSG.SERVER_PROB : error.message);
             setSnackbarVariant("error");
         }
-           
-        }
-
     };
-     const handleCloseSnackbar = () => {
+
+    const handleCloseSnackbar = () => {
         setSnackbarOpen(false);
         setSnackbarMessage("");
     };
@@ -118,32 +102,46 @@ function Login() {
                 },
                 credentials: 'include'
             });
-    
+
             if (response.ok) {
                 const responseData = await response.json();
-    
-                // Store only the email in local storage
-                if (responseData.user && responseData.user.email) {
-                    localStorage.setItem('email', responseData.user.email);
-                }
-    
+                console.log('Response Data:', responseData);
+
                 if (responseData.redirectUrl) {
-                    window.location.href = responseData.redirectUrl;
-                } else if (responseData.sessionId && responseData.user) {
-    
+                    console.log('Redirect URL found, navigating to:', responseData.redirectUrl);
+                    const googleSignInResponse = await GoogleSign();
+                    console.log('Google sign-in response:', googleSignInResponse);
+                    
+
+
+
+                } else if (responseData.isNewUser) {
+                    console.log('New user detected, storing user data in sessionStorage and navigating to /navbar');
+                    sessionStorage.setItem('user', JSON.stringify(responseData.user));
+                    navigate('/navbar'); // Navigate to the navbar route
+                }  else if (responseData.sessionId && responseData.user) {
+                    console.log('Session ID and user data found:', responseData.sessionId, responseData.user);
+
                     if (responseData.isNewUser) {
-                        // New user, navigate to /navbar
-                        window.location.href = "/navbar";
+                        console.log('New user detected, storing user data in sessionStorage and navigating to /navbar');
+                        sessionStorage.setItem('user', JSON.stringify(responseData.user));
+                        navigate('/navbar'); // Navigate to the navbar route
                     } else {
-                        // Check if the user session is valid
                         const sessionUser = sessionStorage.getItem('user');
+                        console.log('Existing user detected, checking sessionStorage for user:', sessionUser);
+
                         if (sessionUser) {
-                            // Existing session, navigate to /navbar
-                            window.location.href = "/navbar";
+                            console.log('Existing session found, navigating to /navbar');
+                            navigate('/navbar'); // Navigate to the navbar route
+                        }
+                        if (responseData.user && responseData.user.email) {
+                            localStorage.setItem('email', responseData.user.email);
+                            console.log('Email stored in localStorage:', responseData.user.email);
+                            navigate('/navbar'); // Navigate to the navbar route
                         } else {
-                            // No existing session, create new and navigate to /navbar
+                            console.log('No existing session found, storing user data in sessionStorage and navigating to /navbar');
                             sessionStorage.setItem('user', JSON.stringify(responseData.user));
-                            window.location.href = "/navbar";
+                            navigate('/navbar'); // Navigate to the navbar route
                         }
                     }
                 }
@@ -155,7 +153,18 @@ function Login() {
         } catch (error) {
             console.error("Error signing in with Google:", error.message);
         }
-    }; 
+    };
+
+
+ 
+       
+
+             
+
+
+
+
+
     return (
         <div className="image">
             <div className="left">
@@ -234,12 +243,6 @@ function Login() {
                             <div className="login-secondary-login">
                                 <div className="text-center">
                                     <div className="link-container">
-                                        {/* <div className="link">New to TA-HUB?</div>
-                                        <span>
-                                            <Link to="/register" className="signup">
-                                                Sign-up
-                                            </Link>
-                                        </span> */}
                                     </div>
                                 </div>
                             </div>
