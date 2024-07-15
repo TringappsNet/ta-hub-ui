@@ -62,7 +62,6 @@ export default function FullFeaturedCrudGrid(props) {
     const [deleteId, setDeleteId] = useState(null);
     const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
     const dispatch = useDispatch();
-
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [snackbarSeverity, setSnackbarSeverity] = useState('success');
@@ -72,8 +71,6 @@ export default function FullFeaturedCrudGrid(props) {
         setSnackbarSeverity(severity);
         setSnackbarOpen(true);
     };
-    
-
 useEffect(() => {
     async function fetchData() {
         const data = await fetchDataFromAPI(apiEndpoint);
