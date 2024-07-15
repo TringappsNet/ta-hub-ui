@@ -1,3 +1,5 @@
+
+
 import  { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import EditIcon from '@mui/icons-material/Edit';
@@ -43,7 +45,7 @@ function EditToolbar(props) {
         }));
       };
       
-  
+
     return (
       <GridToolbarContainer>
         <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
@@ -120,14 +122,15 @@ const handleEditClick = (id) => () => {
 };
 
 const handleSaveClick = (id, rowData) => async () => {
+    console.log('rowData:', rowData); 
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
 
-    const updatedRowData = { ...rowData, isNew: false };
-    
     if (rowData.isNew) {
+        
+        const updatedRowData = { ...rowData, isNew: false };
         await handleUserAdd(updatedRowData); 
     } else {
-        await updateUserOnServer(updatedRowData); 
+        await updateUserOnServer(rowData); 
     }
 
     // Update the state to reflect the changes in the data grid
@@ -201,24 +204,64 @@ const handleCloseDialog = () => {
 const processRowUpdate = async (rowUpdate, row) => {
     const newRow = { ...row, ...rowUpdate };
 
+    const isValidRow = (row, entityType) => {
+        switch (entityType) {
+            case 'user':
+                return row.userId && row.firstName && row.lastName && row.username && row.email && row.phone && row.resetToken && row.password && row.isActive && row.currentSessionId && row.lastLoginTime && row.createdDate;
+            case 'candidate':
+                return row.candidateId && row.candidateEmail && row.candidateContact && row.technology && row.totalExperience && row.currentCtc && row.expectedCtc && row.noticePeriod && row.modeOfWork && row.currentLocation && row.candidateStatus && row.comments && row.remarks && row.recruiter && row.recruitedSource && row.createdDate;
+            case 'client':
+                return row.clientId && row.clientName && row.clientSpocName && row.clientSpocContact && row.clientLocation && row.createdAt;
+            case 'position':
+                return row.clientName && row.jobTitle;
+            default:
+                return false;
+        }
+    };
+
     try {
+        
+        let entityType;
+        if (apiEndpoint === 'http://localhost:8080/api/users/') {
+            entityType = 'user';
+        } else if (apiEndpoint === 'http://localhost:8080/api/candidates/status') {
+            entityType = 'candidate';
+        } else if (apiEndpoint === 'http://localhost:8080/api/clients/clientPositions' || apiEndpoint === 'http://localhost:8080/api/clients/') {
+            entityType = 'client';
+       } else if (apiEndpoint === 'http://localhost:8080/api/positions/') {
+            entityType = 'position';
+        } 
+    
+        
+        console.log('Validating row:', newRow);
+        console.log('Entity type:', entityType);
+        if (!isValidRow(newRow, entityType)) {
+            throw new Error('Please fill in all required fields.');
+        }
+    
         if (newRow.isNew) {
-            if (apiEndpoint === 'http://localhost:8080/api/users/') {
+            
+            if (entityType === 'user') {
                 await handleUserAdd(newRow);
                 handleOpenSnackbar('User Added successfully!', 'success');
-            } else if (apiEndpoint === 'http://localhost:8080/api/candidates/status') {
+            } else if (entityType === 'candidate') {
                 await handleCandidateAdd(newRow);
                 handleOpenSnackbar('Candidate Added successfully!', 'success');
-            } else if (apiEndpoint === 'http://localhost:8080/api/clients/clientPositions ' || apiEndpoint === 'http://localhost:8080/api/clients/' ) {
+            } else if (entityType === 'client') {
                 await handleClientAdd(newRow);
                 handleOpenSnackbar('Client Added successfully!', 'success');
+            } else if (entityType === 'position') {
+                await handlePositionAdd(newRow);
+                handleOpenSnackbar('Position Added successfully!', 'success');
             }
-            newRow.isNew = false;
+    
+            newRow.isNew = false; 
         } else {
-            if (apiEndpoint === 'http://localhost:8080/api/users/') {
+            
+            if (entityType === 'user') {
                 await updateUserOnServer(newRow);
                 handleOpenSnackbar('User Updated successfully!', 'success');
-            } else if (apiEndpoint === 'http://localhost:8080/api/candidates/status') {
+            } else if (entityType === 'candidate') {
                 const response = await fetch(`http://localhost:8080/api/candidates/candidate/${newRow.candidateId}`, {
                     method: 'PUT',
                     headers: {
@@ -226,11 +269,17 @@ const processRowUpdate = async (rowUpdate, row) => {
                     },
                     body: JSON.stringify(newRow),
                 });
+    
+                
+                const responseBody = await response.text();
+                console.log('Response:', response);
+                console.log('Response Body:', responseBody);
+    
                 if (!response.ok) {
-                    throw new Error('Failed to update candidate on the server');
+                    throw new Error(`Failed to update candidate on the server: ${response.statusText}`);
                 }
                 handleOpenSnackbar('Candidate Updated successfully!', 'success');
-            } else if (apiEndpoint === 'http://localhost:8080/api/clients/clientPositions') {
+            } else if (entityType === 'client') {
                 const response = await fetch(`http://localhost:8080/api/clients/client/${newRow.clientId}`, {
                     method: 'PUT',
                     headers: {
@@ -238,24 +287,48 @@ const processRowUpdate = async (rowUpdate, row) => {
                     },
                     body: JSON.stringify(newRow),
                 });
+    
+                
+                const responseBody = await response.text();
+                console.log('Response:', response);
+                console.log('Response Body:', responseBody);
+    
                 if (!response.ok) {
-                    throw new Error('Failed to update client on the server');
+                    throw new Error(`Failed to update client on the server: ${response.statusText}`);
                 }
                 handleOpenSnackbar('Client Updated successfully!', 'success');
+            } else if (entityType === 'position') {
+                const response = await fetch(`http://localhost:8080/api/positions/position/${newRow.positionId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(newRow),
+                });
+    
+                
+                const responseBody = await response.text();
+                console.log('Response:', response);
+                console.log('Response Body:', responseBody);
+    
+                if (!response.ok) {
+                    throw new Error(`Failed to update position on the server: ${response.statusText}`);
+                }
+                handleOpenSnackbar('Position Updated successfully!', 'success');
             }
         }
 
-        // Update the state to reflect the changes in the data grid
         setRows((prevRows) => prevRows.map((row) => (row.id === newRow.id ? newRow : row)));
-
     } catch (error) {
         console.error('Error processing record:', error);
-        handleOpenSnackbar('Error processing record. Please try again.', 'error');
+        handleOpenSnackbar(error.message, 'error');
         return null;
     }
-
+    
     return newRow;
+    
 };
+
 
 
 
@@ -665,3 +738,4 @@ else if (apiEndpoint === 'http://localhost:8080/api/clients/') {
     
 );
 }
+
