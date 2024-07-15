@@ -25,7 +25,7 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import ConfirmDialog from '../Grid/ConfirmationDialog';
 import fetchDataFromAPI from '../Grid/FetchApi';
-//import "../styles/FullFeaturedCrudGrid.css";
+import "../styles/FullFeaturedCrudGrid.css";
 // import EditToolbar from "../Grid/EditToolbar";
 import "../styles/Dnd.css";
 
@@ -279,77 +279,73 @@ const handleAddClick = () => {
 };
 
 const columns = [
-    { field: 'candidateId', headerName: 'CANDIDATEID', width: 140, editable: true, headerAlign: 'center', align: 'center', headerClassName: 'custom-header' },
-    { field: 'candidateEmail', headerName: 'CANDIDATEEMAIL', width: 140, editable: true, headerAlign: 'center', align: 'center', headerClassName: 'custom-header' },
-    { field: 'candidateContact', headerName: 'CANDIDATECONTACT', width: 140, editable: true, headerAlign: 'center', align: 'center', headerClassName: 'custom-header' },
-    { field: 'technology', headerName: 'TECHNOLOGY', width: 140, editable: true, headerAlign: 'center', align: 'center', headerClassName: 'custom-header' },
-    { field: 'totalExperience', headerName: 'TOTALEXPERIENCE', width: 140, editable: true, headerAlign: 'center', align: 'center', headerClassName: 'custom-header' },
-    { field: 'currentCtc', headerName: 'CURRENTCTC', width: 140, editable: true, headerAlign: 'center', align: 'center', headerClassName: 'custom-header' },
-    { field: 'expectedCtc', headerName: 'EXPECTEDCTC', width: 140, editable: true, headerAlign: 'center', align: 'center', headerClassName: 'custom-header' },
-    { field: 'noticePeriod', headerName: 'NOTICEPERIOD', width: 140, editable: true, headerAlign: 'center', align: 'center', headerClassName: 'custom-header' },
-    { field: 'modeOfWork', headerName: 'MODEOFWORK', width: 140, editable: true, headerAlign: 'center', align: 'center', headerClassName: 'custom-header' },
-    { field: 'currentLocation', headerName: 'CURRENTLOCATION', width: 140, editable: true, headerAlign: 'center', align: 'center', headerClassName: 'custom-header' },
-    { field: 'candidateStatus', headerName: 'CANDIDATESTATUS', width: 140, editable: true, headerAlign: 'center', align: 'center', headerClassName: 'custom-header' },
-    { field: 'comments', headerName: 'COMMENTS', width: 140, editable: true, headerAlign: 'center', align: 'center', headerClassName: 'custom-header' },
-    { field: 'remarks', headerName: 'REMARKS', width: 140, editable: true, headerAlign: 'center', align: 'center', headerClassName: 'custom-header' },
-    { field: 'recruiter', headerName: 'RECRUITER', width: 140, editable: true, headerAlign: 'center', align: 'center', headerClassName: 'custom-header' },
-    { field: 'recruitedSource', headerName: 'RECRUITEDSOURCE', width: 140, editable: true, headerAlign: 'center', align: 'center', headerClassName: 'custom-header' },
-    { field: 'createdDate', headerName: 'CREATEDDATE', width: 140, editable: true, headerAlign: 'center', align: 'center', headerClassName: 'custom-header' },
-    { field: 'clientName', headerName: 'CLIENTNAME', width: 140, editable: false, headerAlign: 'center', align: 'center', headerClassName: 'custom-header' },
-    { field: 'taskCandidateStatus', headerName: 'TASKCANDIDATESTATUS', width: 140, editable: false, headerAlign: 'center', align: 'center', headerClassName: 'custom-header' },
-    {
-        headerAlign: 'center',
-        align: 'center',
-        field: 'actions',
-        type: 'actions',
-        headerName: 'Actions',
-        width: 100,
-        headerClassName: 'custom-header',
-        cellClassName: 'actions',
-        getActions: ({ id }) => {
-            const isInEditMode = false; // Replace with your logic to determine if in edit mode
+    { field: 'userId', headerName: 'USER ID', width: 140, editable: true, headerAlign: 'center', align: 'center', headerClassName: 'custom-header' },
+    { field: 'firstName', headerName: 'FIRST NAME', width: 140, editable: true, headerAlign: 'center', align: 'center', headerClassName: 'custom-header' },
+    { field: 'lastName', headerName: 'LAST NAME', width: 140, editable: true, headerAlign: 'center', align: 'center', headerClassName: 'custom-header' },
+    { field: 'username', headerName: 'USERNAME', width: 140, editable: true, headerAlign: 'center', align: 'center', headerClassName: 'custom-header' },
+    { field: 'email', headerName: 'EMAIL', width: 140, editable: true, headerAlign: 'center', align: 'center', headerClassName: 'custom-header' },
+    { field: 'phone', headerName: 'PHONE', width: 140, editable: true, headerAlign: 'center', align: 'center', headerClassName: 'custom-header' },
+    { field: 'resetToken', headerName: 'RESET TOKEN', width: 140, editable: true, headerAlign: 'center', align: 'center', headerClassName: 'custom-header' },
+    { field: 'password', headerName: 'PASSWORD', width: 140, editable: true, headerAlign: 'center', align: 'center', headerClassName: 'custom-header' },
+    { field: 'isActive', headerName: 'ACTIVE', width: 140, editable: true, headerAlign: 'center', align: 'center', headerClassName: 'custom-header' },
+    { field: 'currentSessionId', headerName: 'CURRENT SESSION ID', width: 140, editable: true, headerAlign: 'center', align: 'center', headerClassName: 'custom-header' },
+    { field: 'lastLoginTime', headerName: 'LAST LOGIN TIME', width: 140, editable: true, headerAlign: 'center', align: 'center', headerClassName: 'custom-header' },
+    { field: 'createdDate', headerName: 'CREATED DATE', width: 140, editable: true, headerAlign: 'center', align: 'center', headerClassName: 'custom-header' },
 
-            if (isInEditMode) {
-                return [
-                    <GridActionsCellItem
-                        key="first"
-                        icon={<SaveIcon />}
-                        label="Save"
-                        sx={{
-                            color: 'primary.main',
-                        }}
-                        onClick={() => handleSaveClick(id)}
-                    />,
-                    <GridActionsCellItem
-                        key="second"
-                        icon={<CancelIcon />}
-                        label="Cancel"
-                        className="textPrimary"
-                        onClick={() => handleCancelClick(id)}
-                        color="inherit"
-                    />,
-                ];
-            } else {
-                return [
-                    <GridActionsCellItem
-                        key="third"
-                        icon={<EditIcon />}
-                        label="Edit"
-                        className="textPrimary"
-                        onClick={() => handleEditClick(id)}
-                        color="inherit"
-                    />,
-                    <GridActionsCellItem
-                        key="fourth"
-                        icon={<DeleteIcon />}
-                        label="Delete"
-                        onClick={() => handleDeleteClick(id)}
-                        color="inherit"
-                    />,
-                ];
-            }
-        },
+{
+    field: 'actions',
+    type: 'actions',
+    headerClassName: 'custom-header',
+    headerName: 'Actions',
+    width: 100,
+     headerAlign: 'center', 
+     align:'center',
+  
+    cellClassName: 'actions',
+    getActions: ({ id }) => {
+    const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
+
+    if (isInEditMode) {
+        return [
+        <GridActionsCellItem
+            key="first"
+            icon={<SaveIcon />}
+            label="Save"
+            sx={{
+            color: 'primary.main',
+            }}
+            onClick={handleSaveClick(id)}
+        />,
+        <GridActionsCellItem
+            key="second"
+            icon={<CancelIcon />}
+            label="Cancel"
+            className="textPrimary"
+            onClick={handleCancelClick(id)}
+            color="inherit"
+        />,
+        ];
+    } else {
+        return [
+        <GridActionsCellItem
+            key="third"
+            icon={<EditIcon />}
+            label="Edit"
+            className="textPrimary"
+            onClick={handleEditClick(id)}
+            color="inherit"
+        />,
+        <GridActionsCellItem
+            key="fourth"
+            icon={<DeleteIcon />}
+            label="Delete"
+            onClick={handleDeleteClick(id)}
+            color="inherit"
+        />,
+        ];
+    }
     },
+},
 ];
 return (
         
@@ -376,7 +372,7 @@ return (
         
     }}
 >
-    <Navbar/>
+    <Navbar />
     <TextField
         label="Search"
         value={searchValue}

@@ -129,9 +129,6 @@ function Form() {
 
     };
    
-    
-      
-
       const submitFormHandler = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setFormSubmitted(true); 
@@ -356,7 +353,7 @@ const handleSavePosition = (id) => () => {
       if (newRow[key] === '') {
           
           setSnackbarOpen(true);
-          setSnackbarMessage(`Please fill ${key} before saving.`);
+          setSnackbarMessage(`Please fill ${key}`);
           setSnackbarVariant("error");
           return true; 
       }
