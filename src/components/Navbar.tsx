@@ -14,6 +14,7 @@ import Board from './Dnd';
 import List from './List';
 import Loader from  "../components/Loader";
 import Candidates from "../Grid/Candidates";
+import Positions from "../Grid/Positions";
 const Navbar = () => {
   const [showGrid, setShowGrid] = useState(false);
   const [apiEndpoint, setApiEndpoint] = useState('');
@@ -146,8 +147,7 @@ const Navbar = () => {
       ) : showGrid ? (
         <GridContainer>
           <FullFeaturedCrudGrid apiEndpoint={apiEndpoint} />
-          
-          
+
         </GridContainer>
       ) : (
         <>
