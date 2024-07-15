@@ -125,10 +125,7 @@ function Form() {
 
 
     };
-   
-    
-      
-
+     
       const submitFormHandler = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setFormSubmitted(true); 
@@ -258,9 +255,6 @@ const handleClosePositionsPopup = () => {
     setShowPopup(false);  // Close the positions popup
 };
 
-
-  
-
 const handleAddPosition = () => {
   const newPosition = {
     id: positions.length > 0 ? positions[positions.length - 1].id + 1 : 0,
@@ -375,8 +369,6 @@ const handleSavePosition = (id) => () => {
     setPositions(updatedPositions);
     return newRow;
 };
-
-
 
   const columns: GridColDef[] = [
     { field: 'jobTitle', headerName: 'Job Title', width: 150, editable: true },
