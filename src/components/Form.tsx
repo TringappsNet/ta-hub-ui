@@ -14,9 +14,6 @@ import CustomSnackbar from "../components/CustomSnackbar";
 import { Tooltip } from '@mui/material';
 import { Delete as DeleteIcon, Edit as EditIcon, Save as SaveIcon } from '@mui/icons-material';
 
-
-
-
 interface Position {
   id: number;
   jobTitle: string;
@@ -253,16 +250,16 @@ function Form() {
     setShowPopup(true);
   };
 
-  const handleClosePopup = () => {
-    setShowPopup(false);
-  };
+  const handleCloseForm = () => {
+    setIsOpen(false);  // Close the main form
+};
 
-  const handleCloseIcon1 = () => {
-    setIsOpen(false);
+const handleClosePositionsPopup = () => {
+    setShowPopup(false);  // Close the positions popup
 };
-  const handleCloseIcon2 = () => {
-    setIsOpen(false);
-};
+
+
+  
 
 const handleAddPosition = () => {
   const newPosition = {
@@ -449,7 +446,7 @@ const handleSavePosition = (id) => () => {
                     <form className='form-req' onSubmit={submitFormHandler}>
                         <div className='header-form'>
                             <h3>Client Requirement Form</h3>
-                            <FaTimes className="close-icon pl-2" onClick={handleCloseIcon1} />
+                            <FaTimes className="close-icon pl-2" onClick={handleCloseForm} />
                         </div>
                         <div className="scrollable-area">
                             <div className='fields'>
@@ -550,8 +547,8 @@ const handleSavePosition = (id) => () => {
                             </div>
 
                                 {showPopup && (
-                                <SimplePopup onClose={handleClosePopup}>
-                                    <FaTimes className="close-icon move-left-close-icon" onClick={handleCloseIcon2} style={{ marginLeft: '1148px', marginTop: '-10',display: 'flex', alignItems: 'center'}} />
+                                <SimplePopup onClose={handleClosePositionsPopup}>
+                                    <FaTimes className="close-icon" onClick={handleClosePositionsPopup} style={{marginLeft: 'auto', marginRight: '-8px', marginTop: '-10',display: 'flex', alignItems: 'center' }} />
                                     <Button onClick={handleAddPosition} style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', marginBottom: '10px' }}>Add Position</Button>
                                     <div style={{ height: '89%', width: '100%' }}>
                                     
