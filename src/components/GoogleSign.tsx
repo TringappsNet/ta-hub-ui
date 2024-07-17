@@ -1,40 +1,28 @@
-// src/components/GoogleSignIn.js
+import React, { forwardRef, useImperativeHandle } from 'react';
+ 
 
-import React, { useEffect, useState } from 'react';
-import {jwtDecode} from 'jwt-decode';
-import Navbar from './Navbar'; 
+const GoogleSign = forwardRef((props, ref) => {
+ 
 
-const GoogleSign = () => {
-  const [email, setEmail] = useState('');
+  useImperativeHandle(ref, () => ({
+    signIn: () => {
+      
+      const baseUrl = window.location.origin;  
 
-  useEffect(() => {
-    if (window.google && window.google.accounts && window.google.accounts.id) {
-      window.google.accounts.id.initialize({
-        client_id: "750806534118-45qc3e7ii0619vrbr1roqc0d08hgpihc.apps.googleusercontent.com",
-        callback: handleCallbackResponse
-      });
-      window.google.accounts.id.renderButton(
-        document.getElementById("signInDiv"),
-        { theme: "outline", size: "large" }
-      );
-    } else {
-      console.error('Google accounts.id library not loaded.');
+       
+      const redirectUri = `${baseUrl}/google-callback`;
+
+       
+      const clientId = "750806534118-45qc3e7ii0619vrbr1roqc0d08hgpihc.apps.googleusercontent.com";
+      const scope = encodeURIComponent("email profile");
+      const responseType = "token";
+
+       
+      window.location.href = `https://accounts.google.com/o/oauth2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=${responseType}&scope=${scope}`;
     }
-  }, []);
+  }));
 
-  function handleCallbackResponse(response) {
-    console.log("Encoded JWT ID token:" + response.credential);
-    let userObject = jwtDecode(response.credential);
-    console.log(userObject.email);
-    setEmail(userObject.email);
-  }
-
-  return (
-    <div>
-      <div id="signInDiv"></div>
-      {email && <Navbar email={email} />}
-    </div>
-  );
-};
+  return null;  
+});
 
 export default GoogleSign;

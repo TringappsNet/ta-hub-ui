@@ -12,10 +12,12 @@ import Sidebar from "./components/Sidebar";
 import ApprovalRequest from "./components/ApprovalRequest";
 import FullFeaturedCrudGrid from "./Grid/FullFeaturedCrudGrid";
 import Candidates from "./Grid/Candidates";
+import GoogleCallback from './components/GoogleCallback'; 
 
 const App = () => {
   return (
       <BrowserRouter>
+  
         <Routes>
           <Route >
             <Route path="/" element={<Login />} />
@@ -28,6 +30,8 @@ const App = () => {
             <Route path="/side-bar" element={<Sidebar/>} />
             <Route path="/side-bar" element={<Sidebar/>} />
             <Route path="/approval-req" element={<ApprovalRequest/>} /> 
+            <Route path="/google-callback" element={<GoogleCallback />} />
+            
             {/*<Route path="/candidates" element={<Candidates/>}/>/*}
                 
             {/* <Route path="/board" element={<Board/>} /> */}
@@ -39,6 +43,7 @@ const App = () => {
           </Route>
         </Routes>
       </BrowserRouter>
+      
   );
 };
 

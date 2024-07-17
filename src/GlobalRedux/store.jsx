@@ -4,7 +4,7 @@ import formReducer from "./Features/formSlice";
 import usersReducer from './Features/usersSlice';
 import clientsReducer from './Features/clientsSlice';
 import candidatesReducer from './Features/candidatesSlice';
-import userReducer from "./Features/userSlice";
+ 
  
 
 
@@ -13,7 +13,6 @@ const rootReducer = combineReducers({
   login: loginSlice,
   form: formReducer, 
   users: usersReducer,
-  user: userReducer,
   clients: clientsReducer,
   candidates: candidatesReducer,
   // Add other reducers if needed
