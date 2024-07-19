@@ -1,3 +1,5 @@
+
+
 import  { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import EditIcon from '@mui/icons-material/Edit';
@@ -43,7 +45,7 @@ function EditToolbar(props) {
         }));
       };
       
-  
+
     return (
       <GridToolbarContainer>
         <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
@@ -62,7 +64,6 @@ export default function FullFeaturedCrudGrid(props) {
     const [deleteId, setDeleteId] = useState(null);
     const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
     const dispatch = useDispatch();
-
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [snackbarSeverity, setSnackbarSeverity] = useState('success');
@@ -72,8 +73,6 @@ export default function FullFeaturedCrudGrid(props) {
         setSnackbarSeverity(severity);
         setSnackbarOpen(true);
     };
-    
-
 useEffect(() => {
     async function fetchData() {
         const data = await fetchDataFromAPI(apiEndpoint);
@@ -130,7 +129,11 @@ const handleSaveClick = (id, rowData) => async () => {
     } else {
         await updateUserOnServer(rowData); 
     }
+
+    // Update the state to reflect the changes in the data grid
+    setRows((prevRows) => prevRows.map((row) => (row.id === id ? updatedRowData : row)));
 };
+
 
 
 const handleDeleteClick = (id) => () => {
@@ -189,7 +192,7 @@ const handleCancelClick = (id) => () => {
     if (editedRow.isNew) {
     setRows(rows.filter((row) => row.id !== id));
     }
-};
+};  
 
 const handleCloseDialog = () => {
     setOpenConfirmDialog(false);
@@ -198,68 +201,132 @@ const handleCloseDialog = () => {
 const processRowUpdate = async (rowUpdate, row) => {
     const newRow = { ...row, ...rowUpdate };
 
+    const isValidRow = (row, entityType) => {
+        switch (entityType) {
+            case 'user':
+                return row.userId && row.firstName && row.lastName && row.username && row.email && row.phone && row.resetToken && row.password && row.isActive && row.currentSessionId && row.lastLoginTime && row.createdDate;
+            case 'candidate':
+                return row.candidateId && row.candidateEmail && row.candidateContact && row.technology && row.totalExperience && row.currentCtc && row.expectedCtc && row.noticePeriod && row.modeOfWork && row.currentLocation && row.candidateStatus && row.comments && row.remarks && row.recruiter && row.recruitedSource && row.createdDate;
+            case 'client':
+                return row.clientId && row.clientName && row.clientSpocName && row.clientSpocContact && row.clientLocation && row.createdAt;
+            case 'position':
+                return row.clientName && row.jobTitle;
+            default:
+                return false;
+        }
+    };
+
     try {
+        
+        let entityType;
+        if (apiEndpoint === 'http://localhost:8080/api/users/') {
+            entityType = 'user';
+        } else if (apiEndpoint === 'http://localhost:8080/api/candidates/status') {
+            entityType = 'candidate';
+        } else if (apiEndpoint === 'http://localhost:8080/api/clients/clientPositions' || apiEndpoint === 'http://localhost:8080/api/clients/') {
+            entityType = 'client';
+       } else if (apiEndpoint === 'http://localhost:8080/api/positions/') {
+            entityType = 'position';
+        } 
+    
+        
+        console.log('Validating row:', newRow);
+        console.log('Entity type:', entityType);
+        if (!isValidRow(newRow, entityType)) {
+            throw new Error('Please fill in all required fields.');
+        }
+    
         if (newRow.isNew) {
-            // If it's a new row, add it based on the API endpoint
-            if (apiEndpoint === 'http://localhost:8080/api/users/') {
+            
+            if (entityType === 'user') {
                 await handleUserAdd(newRow);
                 handleOpenSnackbar('User Added successfully!', 'success');
-            } else if (apiEndpoint === 'http://localhost:8080/api/candidates/status') {
+            } else if (entityType === 'candidate') {
                 await handleCandidateAdd(newRow);
                 handleOpenSnackbar('Candidate Added successfully!', 'success');
-            } else if (apiEndpoint === 'http://localhost:8080/api/clients/clientPositions ' || apiEndpoint === 'http://localhost:8080/api/clients/' ) {
+            } else if (entityType === 'client') {
                 await handleClientAdd(newRow);
                 handleOpenSnackbar('Client Added successfully!', 'success');
+            } else if (entityType === 'position') {
+                await handlePositionAdd(newRow);
+                handleOpenSnackbar('Position Added successfully!', 'success');
             }
-         
-            newRow.isNew = false; // Set isNew to false after adding
+    
+            newRow.isNew = false; 
         } else {
-         
-            if (apiEndpoint === 'http://localhost:8080/api/users/') {
+            
+            if (entityType === 'user') {
                 await updateUserOnServer(newRow);
                 handleOpenSnackbar('User Updated successfully!', 'success');
-            } else if (apiEndpoint === 'http://localhost:8080/api/candidates/status') {
-
+            } else if (entityType === 'candidate') {
                 const response = await fetch(`http://localhost:8080/api/candidates/candidate/${newRow.candidateId}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(newRow),
-    });
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(newRow),
+                });
     
-    if (!response.ok) {
-        throw new Error('Failed to update candidate on the server');
-      }
-  
-                // await updateCandidateOnServer(newRow);
-                // console.log("candidate row",newRow)
+                
+                const responseBody = await response.text();
+                console.log('Response:', response);
+                console.log('Response Body:', responseBody);
+    
+                if (!response.ok) {
+                    throw new Error(`Failed to update candidate on the server: ${response.statusText}`);
+                }
                 handleOpenSnackbar('Candidate Updated successfully!', 'success');
-            } else if (apiEndpoint === 'http://localhost:8080/api/clients/clientPositions') {
+            } else if (entityType === 'client') {
                 const response = await fetch(`http://localhost:8080/api/clients/client/${newRow.clientId}`, {
                     method: 'PUT',
                     headers: {
-                      'Content-Type': 'application/json',
+                        'Content-Type': 'application/json',
                     },
                     body: JSON.stringify(newRow),
-                  });
-              
-                  if (!response.ok) {
-                    throw new Error('Failed to update client on the server');
-                  }
-
-                // await updateClientOnServer(newRow);
+                });
+    
+                
+                const responseBody = await response.text();
+                console.log('Response:', response);
+                console.log('Response Body:', responseBody);
+    
+                if (!response.ok) {
+                    throw new Error(`Failed to update client on the server: ${response.statusText}`);
+                }
                 handleOpenSnackbar('Client Updated successfully!', 'success');
+            } else if (entityType === 'position') {
+                const response = await fetch(`http://localhost:8080/api/positions/position/${newRow.positionId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(newRow),
+                });
+    
+                
+                const responseBody = await response.text();
+                console.log('Response:', response);
+                console.log('Response Body:', responseBody);
+    
+                if (!response.ok) {
+                    throw new Error(`Failed to update position on the server: ${response.statusText}`);
+                }
+                handleOpenSnackbar('Position Updated successfully!', 'success');
             }
         }
+
+        setRows((prevRows) => prevRows.map((row) => (row.id === newRow.id ? newRow : row)));
     } catch (error) {
         console.error('Error processing record:', error);
-        handleOpenSnackbar('Error processing record. Please try again.', 'error');
+        handleOpenSnackbar(error.message, 'error');
         return null;
     }
-
+    
     return newRow;
+    
 };
+
+
 
 
 
@@ -363,6 +430,7 @@ if (apiEndpoint === 'http://localhost:8080/api/users/') {
         },
     },
     ];
+
 }  else if (apiEndpoint === 'http://localhost:8080/api/candidates/status') {
     columns = [
         { field: 'candidateId', headerName: 'CANDIDATEID', width: 140, editable: true, headerAlign: 'center', align:'center',headerClassName: 'custom-header'},
@@ -441,10 +509,10 @@ if (apiEndpoint === 'http://localhost:8080/api/users/') {
 else if (apiEndpoint === 'http://localhost:8080/api/clients/clientPositions') {
     columns = [
   
-    { field: 'clientName', align:'center',headerName: 'CLIENTNAME', width: 600, editable: true ,    headerAlign: 'center',headerClassName: 'custom-header',
+    { field: 'clientName', align:'center',headerName: 'CLIENTNAME', width: 520, editable: true ,    headerAlign: 'center',headerClassName: 'custom-header',
 },
    
-{ field: 'jobTitle', align:'center',headerName: 'JOBTITLE', width: 600, editable: true,    headerAlign: 'center',headerClassName: 'custom-header',
+{ field: 'jobTitle', align:'center',headerName: 'JOBTITLE', width: 520, editable: true,    headerAlign: 'center',headerClassName: 'custom-header',
 },
 
 
@@ -467,7 +535,7 @@ else if (apiEndpoint === 'http://localhost:8080/api/clients/clientPositions') {
             return [
             <GridActionsCellItem
                 key="first"
-                icon={<SaveIcon />}
+                    icon={<SaveIcon />}
                 label="Save"
                 sx={{
                 color: 'primary.main',
@@ -621,7 +689,17 @@ else if (apiEndpoint === 'http://localhost:8080/api/clients/') {
             startIcon={<AddIcon />}
             onClick={handleAddClick}
             variant="contained"
-            sx={{ mb: 2, bgcolor: '#2A3F54', color: 'white',marginLeft:129 }}
+            sx={{ mb: 2,
+                bgcolor: '#2A3F54',
+                color: 'white',
+                borderRadius: '4px',
+                paddingLeft: '20px', 
+                paddingRight: '20px', 
+                marginLeft: 'auto',
+                display:'flex',
+                alignItems:'center',
+                marginBottom:'10px',
+                marginTop:'-50px' }}
     >
             
             {getButtonLabel()}
@@ -657,3 +735,4 @@ else if (apiEndpoint === 'http://localhost:8080/api/clients/') {
     
 );
 }
+

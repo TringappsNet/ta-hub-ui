@@ -46,12 +46,12 @@
   .kanboard {
     display: flex;
     flex-direction: column;
-    height: 600px; 
+    height: 700px; 
     margin-left: 10px;
     padding: 10px;
     border-radius: 0px;
     box-sizing: border-box;
-    box-shadow: rgba(158, 159, 158, 0.2) 0px 7px 29px 0px;
+    box-shadow: rgba(210, 212, 210, 0.2) 0px 7px 29px 0px;
     border-left: 1px solid rgb(232, 230, 230);
     overflow-y: auto; 
   }
@@ -205,11 +205,14 @@
 
   /* Additional CSS for draggable items to be scrollable */
   .cards {
-    overflow-y: auto; /* Enable vertical scrolling within the cards column */
+    overflow-y: auto; 
+    /* Enable vertical scrolling within the cards column */
   }
 
   .delete-task-button{
     margin: -2px;
+    cursor: pointer;
+
   }
 
   .kanid{
@@ -217,21 +220,15 @@
     color: #42319a;
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
-
- 
-  
-  
-  
-
 .cardcontent1{
   padding: 10px !important;
 }
-
+/*
 .task-checkbox {
   width: 16px;
   height: 16px;
 }
-
+*/
 .ms-2 {
   margin-left: 8px;
 }
@@ -247,6 +244,6 @@
 
 .delete-button{
   padding: 7px;
-
+ cursor: pointer;
 }
 

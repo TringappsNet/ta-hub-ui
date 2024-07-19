@@ -11,7 +11,6 @@ import KanDash from './KanDash';
 import Sidebar from './Sidebar';
 import styled from 'styled-components';
 import Board from './Dnd';
-import Timeline from './Timeline';
 import List from './List';
 import Loader from  "../components/Loader";
 import Candidates from "../Grid/Candidates";

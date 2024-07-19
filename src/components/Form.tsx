@@ -14,9 +14,6 @@ import CustomSnackbar from "../components/CustomSnackbar";
 import { Tooltip } from '@mui/material';
 import { Delete as DeleteIcon, Edit as EditIcon, Save as SaveIcon } from '@mui/icons-material';
 
-
-
-
 interface Position {
   id: number;
   jobTitle: string;
@@ -28,6 +25,11 @@ interface Position {
   primarySkillSet: string;
   secondarySkillSet: string;
 }
+interface Client {
+    clientId: number; 
+    clientName: string;
+  
+}
 
 function Form() {      
     const [startDate, setStartDate] = useState<Date | null>(null);
@@ -36,7 +38,10 @@ function Form() {
     const [primarySkill, setPrimarySkill] = useState('');
     const [secondarySkill, setSecondarySkill] = useState('');
     const [isOpen, setIsOpen] = useState(true);
-    const [clientName, setClientName] = useState('');
+    const [clientNames, setClientNames] = useState<string[]>([]);
+    const [clientDetails, setClientDetails] = useState<Client[]>([]);
+    const [selectedClient, setSelectedClient] = useState<Client | null>(null);
+    const [clientName, setClientName] = useState<string>('');
     const [clientSpocName, setClientSpocName] = useState('');
     const [clientSpocContact, setClientSpocContact] = useState('');
     const [accountManager, setAccountManager] = useState('');
@@ -72,13 +77,59 @@ function Form() {
         const totalOpenings = positions.reduce((sum, position) => sum + parseInt(position.noOfOpenings, 10), 0);
         setNoOfOpenings(totalOpenings);
       }, [positions]);
-      
 
+      useEffect(() => {
+        fetchClientDetails();
+    }, []);
+
+    const fetchClientDetails = async () => {
+        try {
+            const response = await fetch('http://localhost:8080/api/clients/');
+            if (!response.ok) {
+                throw new Error('Failed to fetch client details');
+            }
+            const data = await response.json();
+            setClientDetails(data);
+            const names = data.map(client => client.clientName);
+            setClientNames(names); 
+            
+        } catch (error) {
+            console.error('Error fetching client details:', error);
+        }
+    };
+    const handleClientChange = (selectedClientName: string) => {
+        const foundClient = clientDetails.find(client => client.clientName === selectedClientName);
+        if (foundClient) {
+            setSelectedClient(foundClient);
+            setClientName(foundClient.clientName);
+            fetchClientAdditionalDetails(foundClient.clientId);
+            console.log("Selected Client ID: ", foundClient.clientId);
+        } else {
+            setSelectedClient(null);
+            setClientName('');
+        }
+    };
+      const fetchClientAdditionalDetails = async (clientId: number) => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/clients/client/${clientId}`);
+            if (!response.ok) {
+                throw new Error('Failed to fetch client details');
+            }
+            const clientData = await response.json();
+            setClientSpocName(clientData.clientSpocName);
+            setClientSpocContact(clientData.clientSpocContact);
+            console.log("Fetched Client Data: ", clientData);
+        } catch (error) {
+            console.error('Error fetching additional client details:', error);
+        }
+
+
+    };
+     
       const submitFormHandler = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setFormSubmitted(true); 
      if (
-        !clientName ||
         !clientSpocName ||
         !reqStartDate ||
         !clientSpocContact ||
@@ -98,7 +149,8 @@ function Form() {
     
         const formData = [{
             requirementStartDate: reqStartDate?.toISOString(),
-            clientName,
+            clientId: selectedClient ? selectedClient.clientId : null,
+            clientName: selectedClient ? selectedClient.clientName : '',
             clientSpocName,
             clientSpocContact,
             accountManager,
@@ -195,39 +247,53 @@ function Form() {
     setShowPopup(true);
   };
 
-  const handleClosePopup = () => {
-    setShowPopup(false);
+  const handleCloseForm = () => {
+    setIsOpen(false);  // Close the main form
+};
+
+const handleClosePositionsPopup = () => {
+    setShowPopup(false);  // Close the positions popup
+};
+
+const handleAddPosition = () => {
+  const newPosition = {
+    id: positions.length > 0 ? positions[positions.length - 1].id + 1 : 0,
+    jobTitle: '',
+    noOfOpenings: '',
+    roleType: '',
+    modeOfWork: '',
+    workLocation: '',
+    yearsOfExperienceRequired: '',
+    primarySkillSet: '',
+    secondarySkillSet: '',
   };
 
-  const handleClose = () => {
-    setIsOpen(false);
-};
-const handleAddPosition = () => {
-  const newPosition: Position = {
-      id: positions.length ? positions[positions.length - 1].id + 1 : 0,
-      jobTitle: '',
-      noOfOpenings: '',
-      roleType: '',
-      modeOfWork: '',
-      workLocation: '',
-      yearsOfExperienceRequired: '',
-      primarySkillSet: '',
-      secondarySkillSet: '',
-  };
-  setPositions([...positions, newPosition]);
+  // Add new position at the beginning
+  setPositions([newPosition, ...positions]);
   setRowModesModel((prevModel) => ({
-      ...prevModel,
-      [newPosition.id]: { mode: GridRowModes.Edit, fieldToFocus: 'jobTitle' },
+    ...prevModel,
+    [newPosition.id]: { mode: GridRowModes.Edit, fieldToFocus: 'jobTitle' },
   }));
 };
 
+const handleSavePosition = (id) => () => {
+  setRowModesModel((prevModel) => ({
+    ...prevModel,
+    [id]: { mode: GridRowModes.View }
+  }));
 
-  const handleSavePosition = (id: GridRowId) => () => {
-    setRowModesModel((prevModel) => ({
-      ...prevModel,
-      [id]: { mode: GridRowModes.View }
-    }));
-  };
+  setPositions((prevPositions) => {
+    const index = prevPositions.findIndex((position) => position.id === id);
+    if (index === -1) return prevPositions;
+
+    const updatedPositions = [...prevPositions];
+    const [savedPosition] = updatedPositions.splice(index, 1);
+    updatedPositions.push(savedPosition);
+
+    return updatedPositions;
+  });
+};
+
 
   const handleDeletePosition = (id: GridRowId) => () => {
     setPositions((prevPositions) => prevPositions.filter((pos) => pos.id !== id));
@@ -262,7 +328,7 @@ const handleAddPosition = () => {
       <Select
         value={value}
         onChange={handleChange}
-        sx={{ width: '100%' }}
+        sx={{ width: '100%'}}
       >
         {options.map((option) => (
           <MenuItem key={option.value} value={option.value}>
@@ -274,15 +340,21 @@ const handleAddPosition = () => {
   };
   const processRowUpdate = (newRow: GridRowModel, oldRow: GridRowModel) => {
     // Check if any field in the new row is empty
-    const isEmptyField = Object.values(newRow).some(value => value === '');
-
-    if (isEmptyField) {
-        setSnackbarOpen(true);
-        setSnackbarMessage("Please fill all fields before saving.");
-        setSnackbarVariant("error");
-        return oldRow; // Return the old row to prevent updating
+    const isEmptyField = Object.keys(newRow).some(key => {
+      if (key === 'secondarySkillSet') {
+        return false;
     }
-
+      if (newRow[key] === '') {
+          
+          setSnackbarOpen(true);
+          setSnackbarMessage(`Please fill ${key} before saving.`);
+          setSnackbarVariant("error");
+          return true; 
+      }
+     
+      return false;
+      
+  });
     // Update the row in the positions state
     const updatedPositions = positions.map((position) => {
         if (position.id === newRow.id) {
@@ -298,11 +370,9 @@ const handleAddPosition = () => {
     return newRow;
 };
 
-
-
   const columns: GridColDef[] = [
     { field: 'jobTitle', headerName: 'Job Title', width: 150, editable: true },
-    { field: 'noOfOpenings', headerName: 'No. of Openings', width: 150, editable: true },
+    { field: 'noOfOpenings', headerName: 'No. of Openings', width: 150, editable: true, valueParser: (value) => (isNaN(value) || !Number.isInteger(Number(value)) ? null : Number(value)) },
     {
       field: 'roleType',
       headerName: 'Role Type',
@@ -318,7 +388,7 @@ const handleAddPosition = () => {
       renderEditCell: (params) => <DropdownEditCell {...params} />,
     },
     { field: 'workLocation', headerName: 'Work Location', width: 150, editable: true },
-    { field: 'yearsOfExperienceRequired', headerName: 'Years of Experience', width: 150, editable: true },
+    { field: 'yearsOfExperienceRequired', headerName: 'Years of Experience', width: 150, editable: true, valueParser: (value) => (isNaN(value) || !Number.isInteger(Number(value)) ? null : Number(value)) },
     { field: 'primarySkillSet', headerName: 'Primary Skill set', width: 150, editable: true },
     { field: 'secondarySkillSet', headerName: 'Secondary Skill set', width: 150, editable: true },
     {
@@ -368,29 +438,32 @@ const handleAddPosition = () => {
                     <form className='form-req' onSubmit={submitFormHandler}>
                         <div className='header-form'>
                             <h3>Client Requirement Form</h3>
-                            <FaTimes className="close-icon pl-2" onClick={handleClose} />
+                            <FaTimes className="close-icon pl-2" onClick={handleCloseForm} />
                         </div>
                         <div className="scrollable-area">
                             <div className='fields'>
                                 <div className="form-group p-2">
                                     <label htmlFor="cname" className="form-label">Client Name</label>
-                                    <input 
-                                        type="text" 
+                                    <select
                                         style={{ borderColor: (formSubmitted && clientName.trim() === '') ? 'red' : '' }} 
                                         className="input-box" 
-                                        name="cname"  
-                                        value={clientName} 
-                                        onChange={(e) => setClientName(e.target.value)}  
-                                    />
+                                        id="clientSelect" 
+                                        value={selectedClient ? selectedClient.clientName : ''}
+                                        onChange={(e) => handleClientChange(e.target.value)}
+                                        >
+                                        <option value=""disabled>Select Client</option>
+                                        {clientNames.map((name, index) => (
+                                            <option key={index} value={name}>{name}</option>
+                                        ))}
+                                    </select>
                                 </div>
                                 <div className="form-group p-2">
                                     <label htmlFor="spocname" className="form-label">Client SPOC Name</label>
                                     <input 
                                         type="text" 
                                         className="input-box" 
-                                        name="spocname" 
-                                        value={clientSpocName} 
-                                        onChange={(e) => setClientSpocName(e.target.value)} 
+                                        value={clientSpocName}
+                                        readOnly
                                     />
                                 </div>
                                 <div className="form-group pt-3 p-2">
@@ -409,10 +482,9 @@ const handleAddPosition = () => {
                                     <label htmlFor="contact" className="form-label">Client Contact Details</label>
                                     <input 
                                         type="number" 
-                                        className="input-box" 
-                                        name="contact" 
-                                        value={clientSpocContact} 
-                                        onChange={(e) => setClientSpocContact(e.target.value)} 
+                                        className="input-box"
+                                        value={clientSpocContact}
+                                        readOnly
                                     />
                                 </div>
                                 <div className="form-group p-2">
@@ -467,10 +539,13 @@ const handleAddPosition = () => {
                             </div>
 
                                 {showPopup && (
-                                <SimplePopup onClose={handleClosePopup}>
-                                    <Button onClick={handleAddPosition}>Add Position</Button>
+                                <SimplePopup onClose={handleClosePositionsPopup}>
+                                    <FaTimes className="close-icon" onClick={handleClosePositionsPopup} style={{marginLeft: 'auto', marginRight: '-8px', marginTop: '-10',display: 'flex', alignItems: 'center' }} />
+                                    <Button onClick={handleAddPosition} style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', marginBottom: '10px' }}>Add Position</Button>
                                     <div style={{ height: '89%', width: '100%' }}>
+                                    
                                     <DataGrid
+                                        className = "custom-data-grid"
                                         rows={positions}
                                         columns={columns}
                                         editMode="row"
@@ -506,14 +581,14 @@ const handleAddPosition = () => {
                                         <div className="form-group">
                                             <label htmlFor="modeOfInterview" className="form-label">Mode of Interview</label>
                                             <select 
-                                                className="input-box" 
+                                                className="input-box"
                                                 name="modeOfInterview" 
                                                 value={modeOfInterviews} 
                                                 onChange={(e) => setModeOfInterviews(e.target.value)}                                                                                            >
                                                 <option value="">Select an option</option>
-                                                <option value="option1">Option 1</option>
-                                                <option value="option2">Option 2</option>
-                                                <option value="option3">Option 3</option>
+                                                <option value="option1">Online Interview</option>
+                                                <option value="option2">In-person Interview</option>
+                                                <option value="option3">Telephone/Mobile Interview</option>
                                             </select>
                                         </div>
                                     </div>

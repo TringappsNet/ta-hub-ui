@@ -10,7 +10,7 @@ interface SidebarProps {
 
 // Styled components
 const SidebarContainer = styled.div`
-  width: 206px;
+  width: 210px;
   height: 95vh;
   // color: black;
   background-color: lightwhite;
@@ -23,6 +23,10 @@ const SidebarContainer = styled.div`
   left: 0;
   border-left: 1px solid rgb(232, 230, 230);
   font-size:15px;
+  box-shadow: rgba(181, 181, 183, 0.2) 0px 7px 29px 0px;
+}
+
+
   
 `;
 
@@ -71,10 +75,6 @@ const Sidebar: React.FC<SidebarProps> = ({ setActiveComponent }) => {
       <MenuItem active={activeComponent === 'board'} onClick={() => handleMenuItemClick('board')}>
         <FaTh />
         <MenuText className="board plan ">Board</MenuText>
-      </MenuItem>
-      <MenuItem active={activeComponent === 'timeline'} onClick={() => handleMenuItemClick('timeline')}>
-        <FaList />
-        <MenuText className="board plan">Timeline</MenuText>
       </MenuItem>
       <MenuItem active={activeComponent === 'list'} onClick={() => handleMenuItemClick('list')}>
         <FaList />
