@@ -6,102 +6,29 @@ import CustomSnackbar from "./CustomSnackbar";
 import GoogleSign from "./GoogleSign";
 
 function Login() {
- 
-   const [email, setEmail] = useState("");
-   const [password, setPassword] = useState("");
-   const navigate = useNavigate();
-   const [snackbarOpen, setSnackbarOpen] = useState(false);
-   const [snackbarMessage, setSnackbarMessage] = useState("");
-   const [snackbarVariant, setSnackbarVariant] = useState('success');
-   const [loading, setLoading] = useState(false);
-   const googleSignRef = useRef();
-   const loginURL = 'http://localhost:8080/api/auth/login';  
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarVariant, setSnackbarVariant] = useState('success');
+  const [loading, setLoading] = useState(false);
+  const googleSignRef = useRef();
+  const loginURL = 'http://localhost:8080/api/auth/login';
 
-    const handleLogin = async (e) => {
-        e.preventDefault();
+  const handleLogin = async (e) => {
+    e.preventDefault();
 
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        const isEmailValid = emailRegex.test(email);
-        const isPasswordValid = password.length >= 8;
-        const userCredentials = { email, password };
-        const DISPLAY_MSG={
-            EMPTY_FIELD:"Please fill all fields!",
-            EMAIL:"Invalid email address!",
-            PASSWORD: "Password must be at least 8 characters long!",
-            SERVER_PROB: "Oops! Something went wrong on our end. Please try again later.",
-         }
 
-        if (!email || !password) {
-            setSnackbarOpen(true);
-            setSnackbarMessage(DISPLAY_MSG.EMPTY_FIELD);
-            setSnackbarVariant("error");
-            return;
-        }
-
-        if (!isEmailValid) {
-            setSnackbarOpen(true);
-            setSnackbarMessage(DISPLAY_MSG.EMAIL);
-            setSnackbarVariant("error");
-            return;
-        }
-
-        if (!isPasswordValid) {
-            setSnackbarOpen(true);
-            setSnackbarMessage(DISPLAY_MSG.PASSWORD);
-            setSnackbarVariant("error");
-            return;
-        }
-
-        try {
-            setLoading(true);  // Start loader
-            const response = await fetch("http://localhost:8080/api/auth/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(userCredentials),
-            });
-            if (!response.ok) {
-                const errorData = await response.text();
-                throw new Error(errorData);
-            }
-
-            const data = await response.json();
-            const { sessionId, message } = data;
-    
-            localStorage.setItem('isLoggedIn', 'true');
-            localStorage.setItem('email',userCredentials.email);
-            localStorage.setItem('sessionId', sessionId);
-            setSnackbarOpen(true);
-            setSnackbarMessage(message);
-            setSnackbarVariant("success");
-            setTimeout(() => {
-                setLoading(false);  // Stop loader before navigation
-                navigate('/navbar'); 
-            }, 2000);
-
-        } catch (error) {
-            console.error("Error logging in:", error.message);
-            if(error.message === "Failed to fetch"){
-            setSnackbarOpen(true);
-            setSnackbarMessage(DISPLAY_MSG.SERVER_PROB);
-
-          
-            setSnackbarVariant("error");
-            }
-        else{
-            setSnackbarOpen(true);
-            setSnackbarMessage(error.message);
-            setSnackbarVariant("error");
-        }
-           
-        }
-
-    };
-     const handleCloseSnackbar = () => {
-        setSnackbarOpen(false);
-        setSnackbarMessage("");
- 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const isEmailValid = emailRegex.test(email);
+    const isPasswordValid = password.length >= 8;
+    const userCredentials = { email, password };
+    const DISPLAY_MSG = {
+        EMPTY_FIELD: "Please fill all fields!",
+        EMAIL: "Invalid email address!",
+        PASSWORD: "Password must be at least 8 characters long!",
+        SERVER_PROB: "Oops! Something went wrong on our end. Please try again later.",
     };
 
     if (!email || !password) {
