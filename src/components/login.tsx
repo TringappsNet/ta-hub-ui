@@ -14,6 +14,7 @@ function Login() {
   const [snackbarVariant, setSnackbarVariant] = useState('success');
   const [loading, setLoading] = useState(false);
   const googleSignRef = useRef();
+  const loginURL = 'http://localhost:8080/api/auth/login';
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -53,7 +54,7 @@ function Login() {
 
     try {
         setLoading(true);  // Start loader
-        const response = await fetch("http://localhost:8080/api/auth/login", {
+        const response = await fetch(loginURL, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
