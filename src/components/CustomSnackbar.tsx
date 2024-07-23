@@ -4,9 +4,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 
-
-
-
 export default function CustomSnackbar({ message, variant, onClose, open }) {
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
